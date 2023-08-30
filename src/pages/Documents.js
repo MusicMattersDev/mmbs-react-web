@@ -3,8 +3,9 @@ import firebaseDb from "../firebase-config";
 import { FormControl, InputLabel, Select, MenuItem, Stack, Button } from "@mui/material";
 import { ArtistConfirmation, ArtistInvoice, BookingList, SubjectList, DownloadBookingList, DownloadSubjectLinesList, DownloadInvoices, DownloadConfirmations} from '../components/GeneratePDF';
 import { saveAs } from 'file-saver';
+import { pdf } from '@react-pdf/renderer';
+import JSZip from 'jszip';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-// import { sendConfirmations } from '../components/SendEmails';
 
 function Documents() {
     const currentDate = new Date();
@@ -75,6 +76,12 @@ function Documents() {
             venueCard.style.display = "none";
         }
     };
+ 
+    //----------------------------------------------------------------------------------------------//
+ 
+    /* Space to eventually add two different functions that download all invoices and confirmations as zip files */
+
+    //----------------------------------------------------------------------------------------------//
 
     return (
         <div className='content'>
@@ -131,6 +138,7 @@ function Documents() {
                         </FormControl>}
                     </Stack>
                 </div>
+
                 {/* Card for each venue containing documents */}
                 {Object.keys(venues).map((key, i) => (
                     <div key={i} className="card-body pb-0">
@@ -172,6 +180,7 @@ function Documents() {
                                 </div>  
                             </div>
                         </div>
+
                         {/* Artist Confirmations */}
                         <div className="card-body pb-0">
                             <div className="card">  
@@ -206,6 +215,7 @@ function Documents() {
                                 </div>  
                             </div>
                         </div>
+
                         {/* Artist Invoices */}
                         <div className="card-body pb-3">
                             <div className="card">  
@@ -217,6 +227,7 @@ function Documents() {
                                         alignItems="center"
                                         spacing={2}
                                     >
+
                                         <Button variant="contained" id={venues[key].name + "_artistinvoice-preview"} onClick={togglePreview}>Preview</Button>
                                         <DownloadInvoices month={month} year={year} venue={venues[key]} venueID={key} />
                                         <div style={{flex: '1 0 0'}} />
@@ -240,6 +251,7 @@ function Documents() {
                                 </div>  
                             </div>
                         </div>
+                        
                         {/* Email Information */}
                         <div className="card-body pb-3">
                             <div className="card">  

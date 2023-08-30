@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';  
 import firebaseDb from "../firebase-config";  
 import AddEditClient from './AddEditClient';  
+import * as XLSX from "xlsx";
+
+
 
 const Clients= () => {  
   
@@ -18,8 +21,7 @@ const Clients= () => {
             }
         })  
     }, [])  
-  
-  
+
     const addOrEdit = (obj) => {  
         if (currentId === '')  
             firebaseDb.child('database/clients').push(  
@@ -61,14 +63,39 @@ const Clients= () => {
     const filteredArtists = Object.keys(ClientObj).filter(key => {
         return ClientObj[key].stage.toLowerCase().includes(query.toLowerCase()) || ClientObj[key].email.toLowerCase().includes(query.toLowerCase())
     })
+
+
+    //----------------------------  Added on 8/30/22 -----------------------------//
   
+    const downloadAsExcel = () => {
+        // your data
+        const data = Object.values(ClientObj);
+        // ... more data
+        ;
+    
+        // convert data to worksheet
+        const ws = XLSX.utils.json_to_sheet(data);
+    
+        // create a workbook
+        const wb = XLSX.utils.book_new();
+    
+        // append the worksheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    
+        // write the workbook and trigger the download
+        XLSX.writeFile(wb, "ClientDetails.xlsx");
+      }
+
+    //----------------------------------------------------------------------------//
+
+
     return (  
         <div className="content">  
             <div className="card-body pb-0">  
                 <div className="card">  
                     <div className="card-header main-search dash-search">  
                         <h3>  
-                            Client Information Details  
+                            Client Information Details 
                         </h3>  
                     </div>  
                 </div>  
@@ -86,6 +113,9 @@ const Clients= () => {
                     <div className="col-12 col-md-12">  
                         <div className="card">  
                             <div className="card-header">Client Management</div>  
+                           
+                        <button style={{margin: "10px"}} onClick={downloadAsExcel}>Download as Excel Spreadsheet</button>
+
                             <div className="card-body position-relative">  
                                 <div className="table-responsive cnstr-record product-tbl">  
                                     <table className="table table-bordered heading-hvr">  
@@ -132,5 +162,7 @@ const Clients= () => {
         </div>  
     );  
 }  
+
+
   
 export default Clients; 
