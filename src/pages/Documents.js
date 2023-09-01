@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react';
 import firebaseDb from "../firebase-config";
 import { FormControl, InputLabel, Select, MenuItem, Stack, Button } from "@mui/material";
 import { ArtistConfirmation, ArtistInvoice, BookingList, SubjectList, DownloadBookingList, DownloadSubjectLinesList, DownloadInvoices, DownloadConfirmations} from '../components/GeneratePDF';
-import { saveAs } from 'file-saver';
-import { pdf } from '@react-pdf/renderer';
-import JSZip from 'jszip';
-import { PDFDownloadLink } from '@react-pdf/renderer';
 
 function Documents() {
     const currentDate = new Date();
@@ -76,12 +72,6 @@ function Documents() {
             venueCard.style.display = "none";
         }
     };
- 
-    //----------------------------------------------------------------------------------------------//
- 
-    /* Space to eventually add two different functions that download all invoices and confirmations as zip files */
-
-    //----------------------------------------------------------------------------------------------//
 
     return (
         <div className='content'>
