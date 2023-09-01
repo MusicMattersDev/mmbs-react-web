@@ -88,7 +88,6 @@ const Clients= () => {
 
     //----------------------------------------------------------------------------//
 
-
     return (  
         <div className="content">  
             <div className="card-body pb-0">  

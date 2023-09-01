@@ -197,19 +197,20 @@ export function DownloadBookingList(props) {
     );
 };
 
-export function DownloadConfirmations(props) {   
+export function DownloadConfirmations(props) {
     const { month, year, venue, venueID } = props;
-    
+
     const [events, setEvents] = useState({});
     const [confirmations, setConfirmations] = useState([]);
-    const [data, setData] = useState(<></>);
+    const [data, setData] = useState('Generating Confirmations...');
+    const [pdfBlobs, setPdfBlobs] = useState([]);
 
     // get list of events when month or venueID changes
     useEffect(() => {
-        firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {  
+        firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {
             setEvents((snapshot.val() !== undefined) ? snapshot.val() : {});
         });
-    }, [month, year, venueID])
+    }, [month, year, venueID]);
 
     // format events into confirmations for the pdf when events changes
     useEffect(() => {
@@ -224,7 +225,7 @@ export function DownloadConfirmations(props) {
                 const end = new Date(events[key].end);
                 const dateStr = start.toLocaleDateString(undefined, dateOptions);
                 const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
-        
+
                 return {
                     day: start.getDate(),
                     stage: events[key].stage,
@@ -240,22 +241,19 @@ export function DownloadConfirmations(props) {
             tempConfirmations = tempConfirmations.filter(tempConfirmation => tempConfirmation["stage"] !== undefined);
         }
         setConfirmations(tempConfirmations);
-    }, [events])
+    }, [events]);
 
     // sets new data for pdf rendering when confirmations change
     useEffect(() => {
-        let tempData = <></>;
         let venueName = venue.name;
         const venueText = {
             "Renaissance-Exchange": "The Renaissance/ Exchange Bar"
         };
         const venueAddress = `${venue.address.street1}, ${venue.address.city}, ${venue.address.state} ${venue.address.zip}`;
-        const venueCityState = `${venue.address.city}, ${venue.address.state}.`
-        // const fileName = (venueName + " Artist Confirmation " + month + ", " + year);
-        let myConfimations = [];
+        const venueCityState = `${venue.address.city}, ${venue.address.state}.`;
 
         if (confirmations !== null && Object.keys(confirmations).length !== 0) {
-            myConfimations = confirmations.sort((a, b) => a.day - b.day || a.startTime.substring(0, 2) - b.startTime.substring(0, 2)).map((confirmation, i) => {
+            const pdfPromises = confirmations.sort((a, b) => a.day - b.day || a.startTime.substring(0, 2) - b.startTime.substring(0, 2)).map((confirmation, i) => {
                 const fileName =(((venue.name === "Renaissance-Exchange") ? "Exchange" : venue.name) + "-Artist Confirmation-" + confirmation.dateForFile + ((confirmation.startTime === "05:00") ? " #1" : " #2"))
                 const confirmationDataIndiv = (
                     <Document title={fileName}>
@@ -276,52 +274,55 @@ export function DownloadConfirmations(props) {
                         </Page>
                     </Document>
                 );
-                // console.log(invoiceDataIndiv)
-                return (
-                    // Download button with the artist name
-                    // <PDFDownloadLink key={i} document={invoiceDataIndiv} fileName={fileName}>
-                    //   {({ blob, url, loading, error }) => (
-                    //     <Button variant="contained">
-                    //       {loading ? 'Loading Document...' : url ? 'Download ' + invoice.stage : 'Loading Document...'}
-                    //     </Button>
-                    //   )}
-                    // </PDFDownloadLink>
-                    <PDFDownloadLink key={i} document={confirmationDataIndiv} fileName={fileName}>
-                        {({ blob, url, loading, error }) => (
-                        <Button variant="contained">
-                            {loading ? 'Loading Document...' : url ? 'Download ' + i : 'Loading Document...'}
-                        </Button>
-                        )}
-                    </PDFDownloadLink>
-                    );
+                return pdf(confirmationDataIndiv).toBlob().then(blob => {
+                    setPdfBlobs(prevPdfBlobs => [...prevPdfBlobs, { fileName, blob }]);
                 });
-                setData(myConfimations);
-                // console.log(data);
+            });
+            Promise.all(pdfPromises).then(() => {
+                setData('            ** PDF files for zip successfully generated **');
+            });
         } else {
-            setData([<span key={0}>No confirmations available to download</span>]);
+            setData([<span key={0}>Processing Documents / None available</span>]);
         }
-    }, [month, confirmations, venue, year])
+    }, [month, confirmations, venue, year]);
+
+    function handleDownloadAll() {
+        const zip = new JSZip();
+        pdfBlobs.forEach(({ fileName, blob }) => {
+            zip.file(fileName + '.pdf', blob);
+        });
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            saveAs(content, 'Confirmations.zip');
+        });
+    }
 
     return (
         <div style={{ width: '70%' }}>
+            <Button variant="contained" onClick={handleDownloadAll}>
+                Download all Confirmations
+            </Button>
             {data}
         </div>
     );
 };
 
-export function DownloadInvoices(props) {   
+/* -------------------------------------------------------------------*/
+
+
+export function DownloadInvoices(props) { /* DONE!!!!!! */
     const { month, year, venue, venueID } = props;
 
     const [events, setEvents] = useState({});
     const [invoices, setInvoices] = useState([]);
     const [data, setData] = useState(<></>);
+    const [pdfBlobs, setPdfBlobs] = useState([]);
 
     // get list of events when month or venueID changes
     useEffect(() => {
-        firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {  
+        firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {
             setEvents((snapshot.val() !== undefined) ? snapshot.val() : {});
         });
-    }, [month, year, venueID])
+    }, [month, year, venueID]);
 
     // format events into invoices for the pdf when events changes
     useEffect(() => {
@@ -336,7 +337,7 @@ export function DownloadInvoices(props) {
                 const end = new Date(events[key].end);
                 const dateStr = start.toLocaleDateString(undefined, dateOptions);
                 const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
-        
+
                 return {
                     day: start.getDate(),
                     stage: events[key].stage,
@@ -352,22 +353,19 @@ export function DownloadInvoices(props) {
             tempInvoices = tempInvoices.filter(tempInvoice => tempInvoice["stage"] !== undefined);
         }
         setInvoices(tempInvoices);
-    }, [events])
+    }, [events]);
 
     // sets new data for pdf rendering when invoices change
     useEffect(() => {
-        let tempData = <></>;
         let venueName = venue.name;
         const venueText = {
             "Renaissance-Exchange": "The Renaissance /Exchange Bar"
         };
         const venueAddress = `${venue.address.street1}, ${venue.address.city}, ${venue.address.state} ${venue.address.zip}`;
-        const venueCityState = `${venue.address.city}, ${venue.address.state}.`
-        // const fileName = (venueName + " Artist Invoice " + month + ", " + year);
-        let myInvoices = [];
+        const venueCityState = `${venue.address.city}, ${venue.address.state}.`;
 
         if (invoices !== null && Object.keys(invoices).length !== 0) {
-            myInvoices = invoices.sort((a, b) => a.day - b.day || a.startTime.substring(0, 2) - b.startTime.substring(0, 2)).map((invoice, i) => {
+            const pdfPromises = invoices.sort((a, b) => a.day - b.day || a.startTime.substring(0, 2) - b.startTime.substring(0, 2)).map((invoice, i) => {
                 const fileName = ((venue.name === "Renaissance-Exchange") ? "Exchange" : venue.name) + " Booking Invoice-" + invoice.dateForFile + ((invoice.startTime === "05:00") ? " #1" : " #2");
                 const invoiceDataIndiv = (
                     <Document title={fileName}>
@@ -375,7 +373,7 @@ export function DownloadInvoices(props) {
                             <View style={styles.confirmationHeader}>
                                 <Text style={{ marginBottom: "15px" }}>{venueName} {venueCityState}</Text>
                                 <Text style={{ marginBottom: "15px" }}>Live performance contract/confirmation</Text>
-                                <Text style={{ marginBottom: "15px" }}>Invoice</Text> 
+                                <Text style={{ marginBottom: "15px" }}>Invoice</Text>
                                 <Text>musicmattersbookings.com</Text>
                             </View>
                             <View>
@@ -386,39 +384,39 @@ export function DownloadInvoices(props) {
                         </Page>
                     </Document>
                 );
-                // console.log(invoiceDataIndiv)
-                return (
-                    // <PDFDownloadLink key={i} document={invoiceDataIndiv} fileName={fileName}>
-                    //   {({ blob, url, loading, error }) => (
-                    //     <Button variant="contained">
-                    //       {loading ? 'Loading Document...' : url ? 'Download ' + invoice.stage : 'Loading Document...'}
-                    //     </Button>
-                    //   )}
-                    // </PDFDownloadLink>
-                    <PDFDownloadLink key={i} document={invoiceDataIndiv} fileName={fileName}>
-                        {({ blob, url, loading, error }) => (
-                        <Button variant="contained">
-                            {loading ? 'Loading Document...' : url ? 'Download ' + i : 'Loading Document...'}
-                        </Button>
-                        )}
-                    </PDFDownloadLink>
-                    );
+                return pdf(invoiceDataIndiv).toBlob().then(blob => {
+                    setPdfBlobs(prevPdfBlobs => [...prevPdfBlobs, { fileName, blob }]);
                 });
-                setData(myInvoices);
-                console.log(data);
+            });
+            Promise.all(pdfPromises).then(() => {
+                setData('            ** PDF files for zip successfully generated **');
+            });
         } else {
-            setData([<span key={0}>No invoices available to download</span>]);
+            setData([<span key={0}>Processing Documents / None Available</span>]);
         }
-        // setData(tempData);
-    }, [month, invoices, venue, year])
-        
-    // TODO: return just one button, not a button for every booking
+    }, [month, invoices, venue, year]);
+
+    function handleDownloadAll() {
+        const zip = new JSZip();
+        pdfBlobs.forEach(({ fileName, blob }) => {
+            zip.file(fileName + '.pdf', blob);
+        });
+        zip.generateAsync({ type: 'blob' }).then(content => {
+            saveAs(content, 'Invoices.zip');
+        });
+    }
+
     return (
         <div style={{ width: '70%' }}>
+            <Button variant="contained" onClick={handleDownloadAll}>
+                Download all Invoices
+            </Button>
             {data}
         </div>
     );
 };
+
+/* -------------------------------------------------------------------*/
 
 export function DownloadSubjectLinesList(props) {   
 
