@@ -20,6 +20,8 @@
     "buffer": "^6.0.3",
     "file-saver": "^2.0.5",
     "firebase": "^9.6.10",
+    "gapi": "^0.0.3",
+    "googleapis": "^126.0.1",
     "html-to-image": "^1.11.11",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",

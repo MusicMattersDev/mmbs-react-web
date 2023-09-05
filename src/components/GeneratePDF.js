@@ -274,10 +274,12 @@ export function DownloadConfirmations(props) {
                         </Page>
                     </Document>
                 );
+                // takes PDF data and converts to blob format before zipping
                 return pdf(confirmationDataIndiv).toBlob().then(blob => {
                     setPdfBlobs(prevPdfBlobs => [...prevPdfBlobs, { fileName, blob }]);
                 });
-            });
+            })
+            // gives user notification if pdf files were successfully generated for the specific location
             Promise.all(pdfPromises).then(() => {
                 setData('            ** PDF files for zip successfully generated **');
             });
@@ -286,6 +288,7 @@ export function DownloadConfirmations(props) {
         }
     }, [month, confirmations, venue, year]);
 
+        // Zip all pdf confirmations
     function handleDownloadAll() {
         const zip = new JSZip();
         pdfBlobs.forEach(({ fileName, blob }) => {
@@ -305,9 +308,6 @@ export function DownloadConfirmations(props) {
         </div>
     );
 };
-
-/* -------------------------------------------------------------------*/
-
 
 export function DownloadInvoices(props) { /* DONE!!!!!! */
     const { month, year, venue, venueID } = props;
@@ -384,10 +384,13 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
                         </Page>
                     </Document>
                 );
+            // takes PDF data and converts to blob format before zipping
                 return pdf(invoiceDataIndiv).toBlob().then(blob => {
                     setPdfBlobs(prevPdfBlobs => [...prevPdfBlobs, { fileName, blob }]);
                 });
             });
+
+     // gives user notification if pdf files were successfully generated for the specific location
             Promise.all(pdfPromises).then(() => {
                 setData('            ** PDF files for zip successfully generated **');
             });
@@ -396,6 +399,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
         }
     }, [month, invoices, venue, year]);
 
+    // Zip all pdf invoices
     function handleDownloadAll() {
         const zip = new JSZip();
         pdfBlobs.forEach(({ fileName, blob }) => {
@@ -415,8 +419,6 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
         </div>
     );
 };
-
-/* -------------------------------------------------------------------*/
 
 export function DownloadSubjectLinesList(props) {   
 

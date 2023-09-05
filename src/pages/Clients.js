@@ -86,6 +86,17 @@ const Clients= () => {
         XLSX.writeFile(wb, "ClientDetails.xlsx");
       }
 
+      const downloadAsGoogleSheet = () => {
+        // Fetch the data from Firebase
+        const data = Object.values(ClientObj);
+    
+        // Convert the data to the Google Sheets format
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+        XLSX.writeFile(workbook, 'ClientDetails.ods');
+    };
+
     //----------------------------------------------------------------------------//
 
     return (  
@@ -112,8 +123,9 @@ const Clients= () => {
                     <div className="col-12 col-md-12">  
                         <div className="card">  
                             <div className="card-header">Client Management</div>  
-                           
-                        <button style={{margin: "10px"}} onClick={downloadAsExcel}>Download as Excel Spreadsheet</button>
+                        
+                        <button onClick={downloadAsGoogleSheet}>Download as Google Sheet</button>
+                        <button onClick={downloadAsExcel}>Download as Excel Spreadsheet</button>
 
                             <div className="card-body position-relative">  
                                 <div className="table-responsive cnstr-record product-tbl">  
