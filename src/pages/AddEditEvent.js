@@ -27,6 +27,7 @@ export default function FormDialog(props) {
     const [startTime, setStartTime] = useState(event.startTime);
     const [endTime, setEndTime] = useState(event.endTime);
     const [price, setPrice] = useState(event.price);
+    const [performers, setPerformers] = useState(event.performers);
     const [email, setEmail] = useState(event.email);
     // used for holding an object of the clients for autocomplete
     const [clients, setClients] = useState({});
@@ -56,6 +57,7 @@ export default function FormDialog(props) {
             return {
                 label: clients[key].stage,
                 emailLabel: clients[key].email,
+                labelPerformer: clients[key].performers ? clients[key].performers.join(", ") : "",
                 id: key
             };
         });
@@ -73,6 +75,7 @@ export default function FormDialog(props) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
+                    performers: "",
                     time: "17:00-19:00",
                     startTime: "17:00",
                     endTime: "19:00",
@@ -83,6 +86,7 @@ export default function FormDialog(props) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
+                    performers: "",
                     time: "17:00-19:30",
                     startTime: "17:00",
                     endTime: "19:30",
@@ -93,6 +97,7 @@ export default function FormDialog(props) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
+                    performers: "",
                     time: "17:00-19:30",
                     startTime: "17:00",
                     endTime: "19:30",
@@ -105,6 +110,7 @@ export default function FormDialog(props) {
         // if stage is not undefined, set to stage, else set to default value
         setStage((event.stage !== undefined) ? event.stage : defaultValues["stage"]);
         setEmail((event.email !== undefined) ? event.email : defaultValues["email"]);
+        setPerformers((event.performers !== undefined) ? event.performers : defaultValues["performers"]);
         setDate(event.date);
         // formatting  |  YYYY-MM-DD  ---> YYYY/MM/DD  | then get month name and year of date
         const tempMonth = (event.date !== undefined) ? new Date(event.date.replace(/-/g, '/')).toLocaleString('default', { month: 'long' }) : "";
@@ -179,6 +185,7 @@ export default function FormDialog(props) {
         const newEvent = {
             stage: stage,
             email: email,
+            performers: performers,
             date: date,
             startTime: startTime,
             endTime: endTime,
@@ -243,6 +250,7 @@ export default function FormDialog(props) {
 
                                     setStage(newValue.label);
                                     setEmail(newValue.emailLabel);
+                                    setPerformers(newValue.performers);
                                 }
                             }}
                             isOptionEqualToValue={(option, value) => option}
