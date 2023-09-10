@@ -217,6 +217,8 @@ export default function FormDialog(props) {
         setOpen(false);
     }
 
+    const currentClient = clientsList?.find(client => client.label === stage);
+
     return (
         <>
             {/* Uncomment if you need a button to open the form */}
@@ -224,33 +226,51 @@ export default function FormDialog(props) {
                 Open Add/Edit Venue Form
             </Button> */}
 
-            <Dialog open={open} onClose={handleClose}>
+<Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     <Stack spacing={2} sx={{ width: 500 }}>
                         {/* Client Input */}
+                        
                         {(clientsList !== undefined && clientsList.length !== 0) && <Autocomplete
                             id="client"
                             options={clientsList.sort((a, b) => a.label - b.label)}
-                            value={stage}
+                            value={currentClient}
                             EmailVal={email}
                             onChange={(event, newValue) => {
+
                                 // artist entered
-                                if (newValue !== null) {
+                                if (newValue) {
+                                    const { label, emailLabel, labelPerformer } = newValue;
                                     // determine if likely group
-                                    if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
-                                        if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 || dayOfWeek === 4){
-                                            setPrice(350);
-                                        }
-                                        else{
-                                            setPrice(380);
-                                        }
+                                    if (label) {
+                                        setStage(label);
+
+                                        // Check for group and adjust price
+                                        if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
+                                            if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 || dayOfWeek === 4){
+                                                setPrice(350);
+                                            }
+                                            else{
+                                                setPrice(380);
+                                            }
+                                       }
+                                    }
+
+                                    if (emailLabel) {
+                                        setEmail(emailLabel);
+                                    }
+
+                                    if (labelPerformer) {
+                                        setPerformers(labelPerformer)
                                     }
                                     // TODO: determine if earlier time slot taken already
-
-                                    setStage(newValue.label);
-                                    setEmail(newValue.emailLabel);
-                                    setPerformers(newValue.performers);
+                                } else {
+                                    if (formType === "Add" ){
+                                    setStage("");
+                                    setEmail("NO_EMAIL_FOR_ARTIST");
+                                    setPerformers("");
+                                    }
                                 }
                             }}
                             isOptionEqualToValue={(option, value) => option}
