@@ -5,7 +5,6 @@ import { color, textAlign } from '@mui/system';
 import { saveAs } from 'file-saver';
 import { Button } from "@mui/material";
 import JSZip from 'jszip';
-import FileSaver from 'file-saver';
 
 Font.register({ family: "Times-Bold" });
 
@@ -102,6 +101,7 @@ const styles = StyleSheet.create({
         color: "#000080"
     }
 })
+
 
 export function DownloadBookingList(props) {   
     const { month, year, venue, venueID } = props;

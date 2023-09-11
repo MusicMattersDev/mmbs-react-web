@@ -126,7 +126,7 @@ const Calendar = () => {
         date.setDate(date.getDate() + days);
         return date;
     }
-
+    
     // used for render the copy button on each day of the calendar
     const renderCopyButton = (content) => {
         const date = content.date;
