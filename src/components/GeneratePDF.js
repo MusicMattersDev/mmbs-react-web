@@ -341,6 +341,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
                 return {
                     day: start.getDate(),
                     stage: events[key].stage,
+                    performers: events[key].performers,
                     // formatting  |  05:00 PM to 07:00 PM  --->  05:00 to 07:00
                     startTime: start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).split(" ")[0].replace(/AM|PM/g, "").trim(),
                     endTime: end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).split(" ")[0].replace(/AM|PM/g, "").trim(),
@@ -378,7 +379,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
                             </View>
                             <View>
                                 <Text textBreakStrategy="simple" style={styles.paragraph}>
-                                    <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.stage}&nbsp;&nbsp;&nbsp;</Text> artist/performers agree to perform live music at {venueText[venueName] !== undefined ? venueText[venueName] : venueName}, {venueAddress} on the evening of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.dateStr}&nbsp;&nbsp;&nbsp;</Text> between the listed hours of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{(invoice.startTime.charAt(0) === "0") ? invoice.startTime.substring(1) : invoice.startTime}pm to {(invoice.endTime.charAt(0) === "0") ? invoice.endTime.substring(1) : invoice.endTime}pm&nbsp;&nbsp;&nbsp;</Text> and {venueText[venueName] !== undefined ? venueText[venueName] : venueName} in {venueCityState} agrees to pay the above named artists <Text style={styles.documentField}> ${invoice.price} </Text> and said payment to be paid upon completion of this performance.
+                                    <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.performers}&nbsp;&nbsp;&nbsp;</Text> artist/performers agree to perform live music at {venueText[venueName] !== undefined ? venueText[venueName] : venueName}, {venueAddress} on the evening of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.dateStr}&nbsp;&nbsp;&nbsp;</Text> between the listed hours of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{(invoice.startTime.charAt(0) === "0") ? invoice.startTime.substring(1) : invoice.startTime}pm to {(invoice.endTime.charAt(0) === "0") ? invoice.endTime.substring(1) : invoice.endTime}pm&nbsp;&nbsp;&nbsp;</Text> and {venueText[venueName] !== undefined ? venueText[venueName] : venueName} in {venueCityState} agrees to pay the above named artists <Text style={styles.documentField}> ${invoice.price} </Text> and said payment to be paid upon completion of this performance.
                                 </Text>
                             </View>
                         </Page>
@@ -767,6 +768,7 @@ export function ArtistInvoice(props) {
                 return {
                     day: start.getDate(),
                     stage: events[key].stage,
+                    performers: events[key].performers,
                     // formatting  |  05:00 PM to 07:00 PM  --->  05:00 to 07:00
                     startTime: start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).split(" ")[0].replace(/AM|PM/g, "").trim(),
                     endTime: end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }).split(" ")[0].replace(/AM|PM/g, "").trim(),
@@ -808,7 +810,7 @@ export function ArtistInvoice(props) {
                                     </View>
                                     <View>
                                         <Text textBreakStrategy="simple" style={styles.paragraph}>
-                                            <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.stage}&nbsp;&nbsp;&nbsp;</Text> artist/performers agree to perform live music at {venueText[venueName] !== undefined ? venueText[venueName] : venueName}, {venueAddress} on the evening of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.dateStr}&nbsp;&nbsp;&nbsp;</Text> between the listed hours of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{(invoice.startTime.charAt(0) === "0") ? invoice.startTime.substring(1) : invoice.startTime}pm to {(invoice.endTime.charAt(0) === "0") ? invoice.endTime.substring(1) : invoice.endTime}pm&nbsp;&nbsp;&nbsp;</Text> and {venueText[venueName] !== undefined ? venueText[venueName] : venueName} in {venueCityState} agrees to pay the above named artists <Text style={styles.documentField}> ${invoice.price} </Text> and said payment to be paid upon completion of this performance.
+                                            <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.performers}&nbsp;&nbsp;&nbsp;</Text> artist/performers agree to perform live music at {venueText[venueName] !== undefined ? venueText[venueName] : venueName}, {venueAddress} on the evening of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{invoice.dateStr}&nbsp;&nbsp;&nbsp;</Text> between the listed hours of <Text style={styles.documentField}>&nbsp;&nbsp;&nbsp;{(invoice.startTime.charAt(0) === "0") ? invoice.startTime.substring(1) : invoice.startTime}pm to {(invoice.endTime.charAt(0) === "0") ? invoice.endTime.substring(1) : invoice.endTime}pm&nbsp;&nbsp;&nbsp;</Text> and {venueText[venueName] !== undefined ? venueText[venueName] : venueName} in {venueCityState} agrees to pay the above named artists <Text style={styles.documentField}> ${invoice.price} </Text> and said payment to be paid upon completion of this performance.
                                         </Text>
                                     </View>
                                 </Page>

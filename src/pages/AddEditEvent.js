@@ -27,6 +27,7 @@ export default function FormDialog(props) {
     const [startTime, setStartTime] = useState(event.startTime);
     const [endTime, setEndTime] = useState(event.endTime);
     const [price, setPrice] = useState(event.price);
+    const [performers, setPerformers] = useState(event.performers);
     const [email, setEmail] = useState(event.email);
     // used for holding an object of the clients for autocomplete
     const [clients, setClients] = useState({});
@@ -56,6 +57,7 @@ export default function FormDialog(props) {
             return {
                 label: clients[key].stage,
                 emailLabel: clients[key].email,
+                labelPerformer: clients[key].performers ? clients[key].performers.join(", ") : "",
                 id: key
             };
         });
@@ -73,6 +75,7 @@ export default function FormDialog(props) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
+                    performers: "",
                     time: "17:00-19:00",
                     startTime: "17:00",
                     endTime: "19:00",
@@ -83,6 +86,7 @@ export default function FormDialog(props) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
+                    performers: "",
                     time: "17:00-19:30",
                     startTime: "17:00",
                     endTime: "19:30",
@@ -93,6 +97,7 @@ export default function FormDialog(props) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
+                    performers: "",
                     time: "17:00-19:30",
                     startTime: "17:00",
                     endTime: "19:30",
@@ -105,6 +110,7 @@ export default function FormDialog(props) {
         // if stage is not undefined, set to stage, else set to default value
         setStage((event.stage !== undefined) ? event.stage : defaultValues["stage"]);
         setEmail((event.email !== undefined) ? event.email : defaultValues["email"]);
+        setPerformers((event.performers !== undefined) ? event.performers : defaultValues["performers"]);
         setDate(event.date);
         // formatting  |  YYYY-MM-DD  ---> YYYY/MM/DD  | then get month name and year of date
         const tempMonth = (event.date !== undefined) ? new Date(event.date.replace(/-/g, '/')).toLocaleString('default', { month: 'long' }) : "";
@@ -179,6 +185,7 @@ export default function FormDialog(props) {
         const newEvent = {
             stage: stage,
             email: email,
+            performers: performers,
             date: date,
             startTime: startTime,
             endTime: endTime,
@@ -210,6 +217,8 @@ export default function FormDialog(props) {
         setOpen(false);
     }
 
+    const currentClient = clientsList?.find(client => client.label === stage);
+
     return (
         <>
             {/* Uncomment if you need a button to open the form */}
@@ -217,32 +226,51 @@ export default function FormDialog(props) {
                 Open Add/Edit Venue Form
             </Button> */}
 
-            <Dialog open={open} onClose={handleClose}>
+<Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{title}</DialogTitle>
                 <DialogContent>
                     <Stack spacing={2} sx={{ width: 500 }}>
                         {/* Client Input */}
+                        
                         {(clientsList !== undefined && clientsList.length !== 0) && <Autocomplete
                             id="client"
                             options={clientsList.sort((a, b) => a.label - b.label)}
-                            value={stage}
+                            value={currentClient}
                             EmailVal={email}
                             onChange={(event, newValue) => {
+
                                 // artist entered
-                                if (newValue !== null) {
+                                if (newValue) {
+                                    const { label, emailLabel, labelPerformer } = newValue;
                                     // determine if likely group
-                                    if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
-                                        if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 || dayOfWeek === 4){
-                                            setPrice(350);
-                                        }
-                                        else{
-                                            setPrice(380);
-                                        }
+                                    if (label) {
+                                        setStage(label);
+
+                                        // Check for group and adjust price
+                                        if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
+                                            if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 || dayOfWeek === 4){
+                                                setPrice(350);
+                                            }
+                                            else{
+                                                setPrice(380);
+                                            }
+                                       }
+                                    }
+
+                                    if (emailLabel) {
+                                        setEmail(emailLabel);
+                                    }
+
+                                    if (labelPerformer) {
+                                        setPerformers(labelPerformer)
                                     }
                                     // TODO: determine if earlier time slot taken already
-
-                                    setStage(newValue.label);
-                                    setEmail(newValue.emailLabel);
+                                } else {
+                                    if (formType === "Add" ){
+                                    setStage("");
+                                    setEmail("NO_EMAIL_FOR_ARTIST");
+                                    setPerformers("");
+                                    }
                                 }
                             }}
                             isOptionEqualToValue={(option, value) => option}
