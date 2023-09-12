@@ -60,9 +60,16 @@ const Clients= () => {
     const changeHandler = (event) => {
         setQuery(event.target.value)
     }
+
+    const sortClients = (a, b) => {
+        if (ClientObj[a].stage.toLowerCase() < ClientObj[b].stage.toLowerCase()) return -1;
+        if (ClientObj[a].stage.toLowerCase() > ClientObj[b].stage.toLowerCase()) return 1;
+        return 0;
+    }
+    
     const filteredArtists = Object.keys(ClientObj).filter(key => {
         return ClientObj[key].stage.toLowerCase().includes(query.toLowerCase()) || ClientObj[key].email.toLowerCase().includes(query.toLowerCase())
-    })
+    }).sort(sortClients);
 
 
     //----------------------------  Added on 8/30/22 -----------------------------//
