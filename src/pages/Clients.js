@@ -74,24 +74,42 @@ const Clients= () => {
 
     //----------------------------  Added on 8/30/22 -----------------------------//
   
+    const [EventsObj, setEventsObj] = useState({});
+
+    useEffect(() => {  
+        firebaseDb.child('database/events').on('value', snapshot => {  
+            if (snapshot.val() != null) {  
+                setEventsObj({  
+                    ...snapshot.val()  
+                });  
+            }  else {
+               setEventsObj({});
+            }
+        });  
+    }, []);
+
+
     const downloadAsExcel = () => {
-        // your data
-        const data = Object.values(ClientObj);
-        // ... more data
-        ;
+        const startOfOctober = new Date("2023-10-01T00:00").toISOString();
+        const endOfOctober = new Date("2023-10-31T23:59").toISOString();
     
-        // convert data to worksheet
-        const ws = XLSX.utils.json_to_sheet(data);
-    
-        // create a workbook
+        // Filter events within the range
+        const filteredEvents = Object.values(EventsObj).filter(event => 
+            event.start >= startOfOctober && event.start <= endOfOctober
+        );
+        
+        // Convert filtered data to worksheet
+        const ws = XLSX.utils.json_to_sheet(filteredEvents);
+        
+        // Create a workbook
         const wb = XLSX.utils.book_new();
-    
-        // append the worksheet to the workbook
-        XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    
-        // write the workbook and trigger the download
-        XLSX.writeFile(wb, "ClientDetails.xlsx");
-      }
+        
+        // Append the worksheet to the workbook
+        XLSX.utils.book_append_sheet(wb, ws, "OctoberEvents");
+        
+        // Write the workbook and trigger the download
+        XLSX.writeFile(wb, "OctoberEventsDetails.xlsx");
+    }
 
       const downloadAsGoogleSheet = () => {
         // Fetch the data from Firebase
