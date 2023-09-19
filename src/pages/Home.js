@@ -21,8 +21,10 @@ export default function Home() {
 
   // function to easily create email template in default mail app. 
 
-  const [emails, setEmails] = useState([]);
+        const [emailsS, setEmails] = useState([]);
         const [currentIndex, setCurrentIndex] = useState(0);
+        const [emailData, setEmailData] = useState([]);
+
       
         const handleFileUpload = (e) => {
           const file = e.target.files[0];
@@ -36,18 +38,30 @@ export default function Home() {
             const worksheet = workbook.Sheets[sheetName];
             
             const data = XLSX.utils.sheet_to_json(worksheet);
-            const emailList = data.map(row => row.Email); // Assuming "Email" is the column header
-      
+            const emailList = data.map(row => row.email); // Assuming "Email" is the column header
+            
+            const emailData = data.map(row => {
+              return {
+                  email: row.email, // Assuming "Email" is the header for email addresses in the Excel
+                  date: row.date,   // Assuming "Date" is the header for event dates
+                  time: row.startTime    // Assuming "Time" is the header for event times
+              }
+          });
+
             setEmails(emailList);
+            setEmailData(emailData);
           };
           reader.readAsBinaryString(file);
         };
 
     const sendEmail = () => {
-        if (currentIndex < emails.length) {
-            const toEmail = emails[currentIndex];
-            const subject = encodeURIComponent("Invoice and Confirmations from Music Matters Bookings");
-            const body = encodeURIComponent("This email contains important booking documents from Mike Moody");
+        if (currentIndex < emailsS.length) {
+            const currentData = emailData[currentIndex];
+            const toEmail = currentData.email;
+            const eventDate = currentData.date;
+            const eventTime = currentData.time;
+            const subject = encodeURIComponent(`Invoice and Confirmations for event on ${eventDate} at ${eventTime} from Music Matters Bookings`);
+            const body = encodeURIComponent(`This email contains important booking documents for the event on ${eventDate} at ${eventTime} from Mike Moody`);
             window.location.href = `mailto:${toEmail}?subject=${subject}&body=${body}`;
       
             setCurrentIndex(currentIndex + 1);
