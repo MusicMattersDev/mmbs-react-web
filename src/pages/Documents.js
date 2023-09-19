@@ -3,6 +3,10 @@ import firebaseDb from "../firebase-config";
 import { FormControl, InputLabel, Select, MenuItem, Stack, Button } from "@mui/material";
 import { ArtistConfirmation, ArtistInvoice, BookingList, SubjectList, DownloadBookingList, DownloadSubjectLinesList, DownloadInvoices, DownloadConfirmations} from '../components/GeneratePDF';
 import * as XLSX from "xlsx";
+import { saveAs } from 'file-saver';
+
+
+
 
 function Documents() {
     const currentDate = new Date();
@@ -73,40 +77,8 @@ function Documents() {
             venueCard.style.display = "none";
         }
     };
-
-    function downloadClientEmailsForMonth() {
-        // Array to store emails for the selected month
-        let emailList = [];
     
-        // Fetch events from Firebase
-        firebaseDb.child('database/events').on('value', snapshot => {
-            if (snapshot.val() != null) {
-                const allEvents = snapshot.val();
-                
-                // Filter events based on the selected month and year
-                for (let eventId in allEvents) {
-                    const event = allEvents[eventId];
-                    const eventDate = new Date(event.date.replace(/-/g, '/')); // Convert YYYY-MM-DD to YYYY/MM/DD for compatibility
-                    const eventMonth = eventDate.toLocaleString('default', { month: 'long' });
-                    const eventYear = eventDate.getFullYear();
-    
-                    if (eventMonth === month && eventYear === year) {
-                        emailList.push(event.email);
-                    }
-                }
-            }
-            
-            // Convert emailList to Excel format
-            const ws = XLSX.utils.json_to_sheet([{ Header: 'Client Emails' }, ...emailList.map(email => ({ Email: email }))]);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Client Emails');
-            
-            // Trigger download
-            XLSX.writeFile(wb, `Client_Emails_${month}_${year}.xlsx`);
-        });
-    }
-
-
+   
     return (
         <div className='content'>
             {/* Card containing all other cards */}
@@ -115,7 +87,6 @@ function Documents() {
                 {/* Header displaying which month and year the documents are for */}
                 <div className="card-header main-search dash-search"> 
                 {/* Triggers the download of client emails to be used with the Home Page Email Function */}
-                <Button onClick={downloadClientEmailsForMonth}>Download Client Emails</Button>
                     <Stack
                         direction="row"
                         justifyContent="flex-start"

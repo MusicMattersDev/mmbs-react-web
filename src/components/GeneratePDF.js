@@ -5,6 +5,7 @@ import { color, textAlign } from '@mui/system';
 import { saveAs } from 'file-saver';
 import { Button } from "@mui/material";
 import JSZip from 'jszip';
+import * as XLSX from "xlsx";
 
 Font.register({ family: "Times-Bold" });
 
@@ -945,4 +946,8 @@ export function SubjectList(props) {
     }, [month, bookings, venue.name, year])
 
     return(data);
+
+
+
+    
 }
