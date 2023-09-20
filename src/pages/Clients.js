@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';  
 import firebaseDb from "../firebase-config";  
+import { FormControl, InputLabel, Select, MenuItem, Stack } from '@mui/material';
 import AddEditClient from './AddEditClient';  
 import * as XLSX from "xlsx";
 
@@ -75,6 +76,9 @@ const Clients= () => {
     //----------------------------  Added on 8/30/22 -----------------------------//
   
     const [EventsObj, setEventsObj] = useState({});
+    const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1);  // Default to current month
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());  // Default to current year
+    
 
     useEffect(() => {  
         firebaseDb.child('database/events').on('value', snapshot => {  
@@ -88,15 +92,92 @@ const Clients= () => {
         });  
     }, []);
 
+    function renderMonthYearDropdowns() {
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+    
+        const currentYear = new Date().getFullYear();
+        const years = Array.from({ length: 10 }, (_, index) => currentYear - index); // Last 10 years
+    
+        return (
+            <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center" style={{ width: '100%' }}> 
+                {/* Dropdowns */}
+                <Stack direction="row" spacing={2} alignItems="center">
+                    {/* Month Selector */}
+                    <FormControl variant="filled" sx={{ m: 1, minWidth: 135 }}>
+                        <InputLabel id="client-month-select-label">Month</InputLabel>
+                        <Select
+                            labelId="client-month-select-label"
+                            id="client-month-select"
+                            value={selectedMonth}
+                            label="Month"
+                            onChange={e => setSelectedMonth(Number(e.target.value))}
+                        >
+                            {months.map((month, index) => 
+                                <MenuItem key={month} value={index + 1}>{month}</MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                
+                    {/* Year Selector */}
+                    <FormControl variant="filled" sx={{ m: 1, minWidth: 90 }}>
+                        <InputLabel id="client-year-select-label">Year</InputLabel>
+                        <Select
+                            labelId="client-year-select-label"
+                            id="client-year-select"
+                            value={selectedYear}
+                            label="Year"
+                            onChange={e => setSelectedYear(Number(e.target.value))}
+                        >
+                            {years.map(year => 
+                                <MenuItem key={year} value={year}>{year}</MenuItem>
+                            )}
+                        </Select>
+                    </FormControl>
+                </Stack>
+
+                <Stack direction="column" spacing={0.5} style={{ flex: 1 }}>
+                    <button  onClick={downloadAsGoogleSheet}>Download as Google Sheet</button>
+                    <button  onClick={downloadAsExcel}>Download as Excel Spreadsheet</button>
+                </Stack>
+                
+                
+            </Stack>
+        );
+    }
+
+    function getExcelFileName() {
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+    
+        return `${months[selectedMonth - 1]}${selectedYear}Events.xlsx`;
+    }
 
     const downloadAsExcel = () => {
-        const startOfOctober = new Date("2023-10-01T00:00").toISOString();
-        const endOfOctober = new Date("2023-10-31T23:59").toISOString();
+        // Adjust month since JavaScript months are 0-indexed (0 for January, 1 for February, etc.)
+        const adjustedMonth = parseInt(selectedMonth) - 1; 
+        const startDate = new Date(selectedYear, adjustedMonth, 1).toISOString();
+        const nextMonthFirstDate = new Date(selectedYear, adjustedMonth + 1, 1);
+        const endDate = new Date(nextMonthFirstDate - 1).toISOString(); // One millisecond before the next month starts
+        const filename = getExcelFileName();
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
     
         // Filter events within the range
         const filteredEvents = Object.values(EventsObj).filter(event => 
-            event.start >= startOfOctober && event.start <= endOfOctober
+            event.start >= startDate && event.start <= endDate
         );
+        
+        if (filteredEvents.length === 0) {
+            alert("No data available for the selected month.");
+            return;
+        }
         
         // Convert filtered data to worksheet
         const ws = XLSX.utils.json_to_sheet(filteredEvents);
@@ -105,10 +186,10 @@ const Clients= () => {
         const wb = XLSX.utils.book_new();
         
         // Append the worksheet to the workbook
-        XLSX.utils.book_append_sheet(wb, ws, "OctoberEvents");
+        XLSX.utils.book_append_sheet(wb, ws, `${months[selectedMonth - 1]}Events`);
         
         // Write the workbook and trigger the download
-        XLSX.writeFile(wb, "OctoberEventsDetails.xlsx");
+        XLSX.writeFile(wb, filename);
     }
 
       const downloadAsGoogleSheet = () => {
@@ -149,8 +230,8 @@ const Clients= () => {
                         <div className="card">  
                             <div className="card-header">Client Management</div>  
                         
-                        <button onClick={downloadAsGoogleSheet}>Download as Google Sheet</button>
-                        <button onClick={downloadAsExcel}>Download as Excel Spreadsheet</button>
+                            {renderMonthYearDropdowns()}
+                            
 
                             <div className="card-body position-relative">  
                                 <div className="table-responsive cnstr-record product-tbl">  
