@@ -3,10 +3,6 @@ import firebaseDb from "../firebase-config";
 import { FormControl, InputLabel, Select, MenuItem, Stack, Button } from "@mui/material";
 import { ArtistConfirmation, ArtistInvoice, BookingList, SubjectList, DownloadBookingList, DownloadSubjectLinesList, DownloadInvoices, DownloadConfirmations} from '../components/GeneratePDF';
 import * as XLSX from "xlsx";
-import { saveAs } from 'file-saver';
-
-
-
 
 function Documents() {
     const currentDate = new Date();
@@ -77,7 +73,115 @@ function Documents() {
             venueCard.style.display = "none";
         }
     };
+
+    function formatDateToCustomFormat(dateString) {
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        
+        const dateObj = new Date(dateString);
+        
+        const dayName = days[dateObj.getUTCDay()];
+        const monthName = months[dateObj.getUTCMonth()];
+        const dayNumber = dateObj.getUTCDate();
+        const year = dateObj.getUTCFullYear();
+        
+        return `${dayName}, ${monthName} ${dayNumber}, ${year}`;
+        
+    }
+
+    function generateAndDownloadExcel(month, year) {
+        // Convert month name to month number (e.g., 'January' to '01')
+        const monthNumber = ("0" + (new Date(`${month} 1 ${year}`).getMonth() + 1)).slice(-2);
     
+        // Determine the start and end dates for the month
+        const startDate = new Date(Date.UTC(year, parseInt(monthNumber) - 1, 1));
+        const endDate = new Date(Date.UTC(year, parseInt(monthNumber), 0, 23, 59, 59, 999)); // Up to the last millisecond of the last day of the month
+
+    
+        const startDateString = `${startDate.getUTCFullYear()}-${("0" + (startDate.getUTCMonth() + 1)).slice(-2)}-${("0" + startDate.getUTCDate()).slice(-2)}`;
+        const endDateString = `${endDate.getUTCFullYear()}-${("0" + (endDate.getUTCMonth() + 1)).slice(-2)}-${("0" + endDate.getUTCDate()).slice(-2)}`;
+    
+        // Initialize the Firebase references
+        const eventsRef = firebaseDb.child('database/events');
+        const clientsRef = firebaseDb.child('database/clients');
+        const venuesRef = firebaseDb.child('database/venues');
+    
+        // Fetch venues data first
+        venuesRef.once('value').then(venuesSnapshot => {
+            const venuesData = venuesSnapshot.val();
+    
+            // Then fetch events based on the selected month and year
+            eventsRef.orderByChild('date').startAt(startDateString).endAt(endDateString).once('value').then(eventsSnapshot => {
+                const eventsData = eventsSnapshot.val();
+    
+                // If there are no events for the selected month/year, return
+                if (!eventsData) return;
+    
+                // Fetch all clients
+                clientsRef.once('value').then(clientsSnapshot => {
+                    const clientsData = clientsSnapshot.val();
+    
+                    let excelData = [];
+    
+                    Object.values(eventsData).forEach(event => {
+                        if (new Date(event.date) < startDate || new Date(event.date) > endDate) return; // Note the change here
+                        if (!event.clientID) {  // Safety check: if event does not have a client ID, skip this iteration
+                            console.warn(`Event missing client ID. Event data:`, event);
+                            return;
+                        }
+    
+                        let client = clientsData[event.clientID];
+                        if (!client) {  // Safety check: if client data is not found, skip this iteration
+                            console.warn(`No client data found for event with client ID: ${event.clientID}`);
+                            return;
+                        }
+    
+                        let email = client.email;
+    
+                        // Extract the venue name using the venue ID from the event
+                        let venue = venuesData[event.venue];
+                        let venueName = (venue && venue.name === "Renaissance-Exchange") ? "Exchange" : (venue ? venue.name : "UnknownVenue");
+    
+                        let timeSuffix = (event.startTime === "17:00" ? " #1" : " #2");
+                        let formattedDate = formatDateToCustomFormat(event.date);
+                        let invoiceFileName = venueName + " Booking Invoice-" + formattedDate + timeSuffix + ".pdf";
+                        let confirmationFileName = venueName + "-Artist Confirmation-" + formattedDate + timeSuffix + ".pdf";
+    
+                        excelData.push({
+                            "Email": email,
+                            "Attachment1": invoiceFileName,
+                            "Attachment2": confirmationFileName
+                        });
+                    });
+    
+                    excelData.sort((a, b) => {
+                        const extractDateComponents = (filename) => {
+                            const datePart = filename.split("Booking Invoice-")[1];
+                            const month = datePart.split(",")[1].trim().split(" ")[0];
+                            const day = parseInt(datePart.split(",")[1].trim().split(" ")[1], 10);
+                            const year = parseInt(datePart.split(",")[2].trim(), 10);
+                            const timeSuffix = filename.includes("#1") ? 1 : 2;
+                            return { year, month, day, timeSuffix };
+                        };
+                    
+                        const dateA = extractDateComponents(a["Attachment1"]);
+                        const dateB = extractDateComponents(b["Attachment1"]);
+                    
+                        if (dateA.year !== dateB.year) return dateA.year - dateB.year;
+                        if (dateA.month !== dateB.month) return new Date(dateA.month + " 1, 1970").getMonth() - new Date(dateB.month + " 1, 1970").getMonth();
+                        if (dateA.day !== dateB.day) return dateA.day - dateB.day;
+                        return dateA.timeSuffix - dateB.timeSuffix;
+                    });
+    
+                    // Use the excelData to generate the Excel file and trigger download
+                    const wb = XLSX.utils.book_new();
+                    const ws = XLSX.utils.json_to_sheet(excelData);
+                    XLSX.utils.book_append_sheet(wb, ws, "Data");
+                    XLSX.writeFile(wb, month + " GMass Data.xlsx");
+                });
+            });
+        });
+    }
    
     return (
         <div className='content'>
@@ -86,7 +190,6 @@ function Documents() {
             <div className="card">
                 {/* Header displaying which month and year the documents are for */}
                 <div className="card-header main-search dash-search"> 
-                {/* Triggers the download of client emails to be used with the Home Page Email Function */}
                     <Stack
                         direction="row"
                         justifyContent="flex-start"
@@ -95,6 +198,8 @@ function Documents() {
                     >
                           
                         <h3>{month} {year} - Documents</h3>
+                        <Button variant = "contained" onClick={() => generateAndDownloadExcel(month, year)}>Download GMass Data</Button>
+
                         <div style={{flex: '1 0 0'}} />
                         {/* Month Selector */}
                         <FormControl variant="filled" sx={{ m: 1, minWidth: 135 }}>

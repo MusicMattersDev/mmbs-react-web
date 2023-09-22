@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import firebaseDb from "../firebase-config";
 import { Page, Text, Document, View, PDFViewer, StyleSheet, Font, pdf, PDFDownloadLink} from "@react-pdf/renderer";
-import { color, textAlign } from '@mui/system';
 import { saveAs } from 'file-saver';
 import { Button } from "@mui/material";
 import JSZip from 'jszip';
-import * as XLSX from "xlsx";
 
 Font.register({ family: "Times-Bold" });
 
@@ -296,7 +294,7 @@ export function DownloadConfirmations(props) {
             zip.file(fileName + '.pdf', blob);
         });
         zip.generateAsync({ type: 'blob' }).then(content => {
-            saveAs(content, 'Confirmations.zip');
+            saveAs(content, month + year + ' Confirmations.zip');
         });
     }
 
@@ -408,7 +406,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
             zip.file(fileName + '.pdf', blob);
         });
         zip.generateAsync({ type: 'blob' }).then(content => {
-            saveAs(content, 'Invoices.zip');
+            saveAs(content, month + year + ' Invoices.zip');
         });
     }
 
