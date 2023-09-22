@@ -39,6 +39,8 @@ const Calendar = () => {
                         date: obj[key].date,
                         stage: obj[key].stage,
                         startTime: obj[key].startTime,
+                        performers: obj[key].performers,
+                        email: obj[key].email,
                         endTime: obj[key].endTime,
                         price: obj[key].price,
                         venue: obj[key].venue,
@@ -69,6 +71,8 @@ const Calendar = () => {
         // pass a filled out event object with the properties of the clicked event
         const event = {
             stage: info.event.extendedProps.stage,
+            email: info.event.extendedProps.email,
+            performers: info.event.extendedProps.performers,
             startTime: info.event.extendedProps.startTime,
             endTime: info.event.extendedProps.endTime,
             price: info.event.extendedProps.price,
