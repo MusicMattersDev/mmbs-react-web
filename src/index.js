@@ -6,6 +6,8 @@ import {
 } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import 'bootstrap/dist/css/bootstrap.min.css';
+<script src="https://apis.google.com/js/api.js"></script>
+
 
 // ReactDOM.render(
 //   <React.StrictMode>

@@ -278,6 +278,7 @@ export function DownloadConfirmations(props) {
                     setPdfBlobs(prevPdfBlobs => [...prevPdfBlobs, { fileName, blob }]);
                 });
             })
+            
             // gives user notification if pdf files were successfully generated for the specific location
             Promise.all(pdfPromises).then(() => {
                 setData('            ** PDF files for zip successfully generated **');
