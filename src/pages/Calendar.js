@@ -143,6 +143,29 @@ function Calendar({ showSidebar, setShowSidebar }) {
         return date;
     }
     
+    function to12HourFormat(timeString) {
+        // Splitting the time string into hours and minutes
+        const [hour, minute] = timeString.split(":");
+        const hours = parseInt(hour, 10);
+        
+        // Determining AM or PM
+        let period = "AM";
+        if (hours >= 12) {
+            period = "PM";
+        }
+        
+        // Converting 24-hour format to 12-hour format
+        let hour12 = hours % 12;
+        if (hour12 === 0) {
+            hour12 = 12;
+        }
+        
+        return `${hour12}:${minute} ${period}`;
+    }
+    
+    
+
+
     // used for render the copy button on each day of the calendar
     const renderCopyButton = (content) => {
         const date = content.date;
@@ -244,12 +267,12 @@ function Calendar({ showSidebar, setShowSidebar }) {
                     text-align: center;
                 }
             `}</style>
-    
     <div className='content' >
-    
-                <Button variant="contained" startIcon={<KeyboardDoubleArrowLeftIcon />} onClick={() => navigate('/venues')}> Return to Venues </Button>
+    <div className='calendarButtons' style={{paddingLeft: '30px', paddingTop:'15px'}}>
+
+                <Button variant="contained" startIcon={<KeyboardDoubleArrowLeftIcon />}  onClick={() => navigate('/venues')}> Return to Venues </Button>
                 <Button variant="contained" endIcon ={<DownloadIcon />} onClick={downloadPDF}>Download as PDF</Button>
-    
+    </div>
                 <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}}
                 >
                     <div className="calendar-container">
@@ -267,7 +290,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                             >
                                 <strong style={{ fontSize: '16px'}}>{event.title}</strong>
                                 <br />
-                                <i style={{ fontSize: '12px' }}>{event.extendedProps.startTime} - {event.extendedProps.endTime}</i>
+                                <i style={{ fontSize: '12px' }}>{to12HourFormat(event.extendedProps.startTime)} - {to12HourFormat(event.extendedProps.endTime)}</i>
                             </div>
                         )}
                         contentHeight="auto"
