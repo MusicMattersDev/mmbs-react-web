@@ -7,8 +7,10 @@ import firebaseDb from "../firebase-config";
 import { useParams, useNavigate } from 'react-router-dom';
 import '../App.css';
 import AddEditEvent from './AddEditEvent'
-import { IconButton, Snackbar, Alert } from "@mui/material";
+import { IconButton, Snackbar, Alert,} from "@mui/material";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import KeyboardDoubleArrowLeftIcon from '@mui/icons-material/KeyboardDoubleArrowLeft';
+import DownloadIcon from '@mui/icons-material/Download';
 import { Button } from "@mui/material";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
@@ -48,7 +50,9 @@ function Calendar({ showSidebar, setShowSidebar }) {
                     extendedProps: {
                         date: obj[key].date,
                         stage: obj[key].stage,
+                        performers: obj[key].performers,
                         startTime: obj[key].startTime,
+                        email: obj[key].email,
                         endTime: obj[key].endTime,
                         price: obj[key].price,
                         venue: obj[key].venue,
@@ -79,8 +83,10 @@ function Calendar({ showSidebar, setShowSidebar }) {
         // pass a filled out event object with the properties of the clicked event
         const event = {
             stage: info.event.extendedProps.stage,
+            performers: info.event.extendedProps.performers,
             startTime: info.event.extendedProps.startTime,
             endTime: info.event.extendedProps.endTime,
+            email: info.event.extendedProps.email,
             price: info.event.extendedProps.price,
             date: info.event.extendedProps.date,
             eventID: info.event.extendedProps.eventID,
@@ -218,6 +224,8 @@ function Calendar({ showSidebar, setShowSidebar }) {
         });
     };
 
+    
+
     return (
         <>
             <style jsx>{`
@@ -226,20 +234,42 @@ function Calendar({ showSidebar, setShowSidebar }) {
                     overflow: visible;
                     lineHeight: 1.2;
                 }
+                .fc-daygrid-day.fc-day-other .fc-event {
+                    display: none;
+                }
+                .fc-event{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                }
             `}</style>
     
     <div className='content' >
     
-    <Button style={{paddingLeft: '30px', paddingTop: '15px'}} onClick={() => navigate('/venues')}>
-    Return to Venues
-</Button>
-                <Button style={{paddingLeft: '30px', paddingTop: '15px'}}onClick={downloadPDF}>Download as PDF</Button>
+                <Button variant="contained" startIcon={<KeyboardDoubleArrowLeftIcon />} onClick={() => navigate('/venues')}> Return to Venues </Button>
+                <Button variant="contained" endIcon ={<DownloadIcon />} onClick={downloadPDF}>Download as PDF</Button>
     
                 <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}}
                 >
+                    <div className="calendar-container">
                     <FullCalendar
                         ref={calendarRef}
                         events={events}
+                        eventContent={({ event }) => (
+                            <div 
+                                style={{ 
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    height: '100%',
+                                }}
+                            >
+                                <strong style={{ fontSize: '16px'}}>{event.title}</strong>
+                                <br />
+                                <i style={{ fontSize: '12px' }}>{event.extendedProps.startTime} - {event.extendedProps.endTime}</i>
+                            </div>
+                        )}
                         contentHeight="auto"
                         plugins={[dayGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
@@ -247,6 +277,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                         eventClick={handleEventClick}
                         dayCellContent={renderCopyButton}
                     />
+                    </div>
                 </div>
                 
                 <AddEditEvent
