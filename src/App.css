@@ -7,6 +7,42 @@
   font-family: sans-serif;
 }
 
+/* Hide navigation buttons by default, including the disabled 'today' button */
+.fc-header-toolbar .fc-prev-button,
+.fc-header-toolbar .fc-next-button,
+.fc-header-toolbar .fc-today-button {
+  opacity: 0 !important;  /* Added !important */
+  transition: opacity 0.3s;  /* Smooth transition */
+}
+
+.fc-header-toolbar .fc-today-button.fc-button-primary-disabled {
+  opacity: 0 !important;  /* Added !important */
+  transition: opacity 0.3s;  /* Smooth transition */
+}
+
+/* Show navigation buttons on hover, including the disabled 'today' button */
+.fc-header-toolbar:hover .fc-prev-button,
+.fc-header-toolbar:hover .fc-next-button,
+.fc-header-toolbar:hover .fc-today-button,
+.fc-header-toolbar:hover .fc-today-button.fc-button-primary-disabled {
+  opacity: 1 !important;
+}
+
+
+
+
+
+.main-layout {
+  display: flex;
+  height: 100vh;  
+  flex-direction: row; 
+
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;}
+
 
 .venues, .clients {
   display: flex;
@@ -25,13 +61,7 @@
   margin-left: -25px;
 }
 
-.content {
-  margin-left: 275px;
-  width: calc(100% - 275px);
-  margin-top: 10px;
-  height: calc(100% - 10px);
 
-}
 
 input{
   padding: 5px 0px 5px 10px;

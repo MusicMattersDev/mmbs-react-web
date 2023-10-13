@@ -16,6 +16,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
+  const [showSidebar, setShowSidebar] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
 
@@ -40,6 +41,7 @@ function App() {
   }
 
   return (
+    
     <>
       <ToastContainer />
       <Routes>
@@ -62,13 +64,13 @@ function App() {
           }
           />
         </Route>
-        <Route element={<WithNav />}>
+        <Route path="venues/:venue" element={<Calendar showSidebar={showSidebar} setShowSidebar={setShowSidebar} />} />
+        
+        <Route path="/" element={<WithNav showSidebar={showSidebar} />}>
           <Route path='/home' element={<Home />} />
           <Route path='/venues' element={<Venues />} />
-          <Route
-            path="venues/:venue"
-            element={<Calendar />}
-          />
+          <Route path="venues/:venue" element={<Calendar setShowSidebar={setShowSidebar} />} />
+
           <Route path='/clients' element={<Clients />} />
           <Route path='/documents' element={<Documents />} />
         </Route>

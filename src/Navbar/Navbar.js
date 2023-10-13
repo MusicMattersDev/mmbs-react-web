@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React, { useState, useEffect } from 'react';
 import * as FaIcons from 'react-icons/fa'
 import * as AiIcons from 'react-icons/ai'
 import { Link } from 'react-router-dom'
@@ -10,24 +10,29 @@ import mmlogo from '../assets/icon-transparent.png'
 import Button from '@mui/material/Button'
 import LogoutIcon from '@mui/icons-material/Logout'
 
-function Navbar() {
-
-  let navigate = useNavigate();
+function Navbar({ showSidebar: initialShowSidebar }) {
+    let navigate = useNavigate();
+    
     const handleLogout = () => {
         sessionStorage.removeItem('Auth Token');
-        navigate('/')
+        navigate('/');
     }
-  const [sidebar, setSidebar] = useState(true)
-  
-  const showSidebar = () => setSidebar(!sidebar);
+    
+    // Initialize sidebar state with the initialShowSidebar prop
+    const [sidebar, setSidebar] = useState(initialShowSidebar);
 
-  return (
-    <>
-        <div className="navbar">
-        </div>
+    // Use an effect to update the sidebar state if the initialShowSidebar prop changes
+    useEffect(() => {
+        setSidebar(initialShowSidebar);
+    }, [initialShowSidebar]);
 
-        <IconContext.Provider value={{color: '#fff'}}>
-        <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
+    return (
+        <>
+            <div className="navbar">
+            </div>
+
+            <IconContext.Provider value={{color: '#fff'}}>
+                <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
             <ul className='nav-menu-items'>
                 <img src={ mmlogo } alt="music matters logo"/>
                 <h1 className="mmtitle" style={{ textAlign: "center", paddingLeft: "0px", paddingRight: "16px" }}>Music Matters Bookings</h1>

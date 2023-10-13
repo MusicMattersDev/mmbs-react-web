@@ -2,11 +2,15 @@ import React from 'react';
 import Navbar from './Navbar.js';
 import { Outlet } from 'react-router';
 
-export default () => {
+function WithNav({ showSidebar }) {
   return (
-    <>
-      <Navbar />
-      <Outlet />
-    </>
-  )
+      <div className="main-layout">
+          <Navbar showSidebar={showSidebar} />
+          <div className="content">
+              <Outlet />
+          </div>
+      </div>
+  );
 }
+
+export default WithNav;

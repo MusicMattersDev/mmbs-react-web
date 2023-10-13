@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
+    "@fullcalendar/adaptive": "^6.1.9",
     "@fullcalendar/core": "^5.11.0",
     "@fullcalendar/daygrid": "^5.11.0",
     "@fullcalendar/interaction": "^5.11.0",
@@ -23,6 +24,9 @@
     "gapi": "^0.0.3",
     "googleapis": "^126.0.1",
     "html-to-image": "^1.11.11",
+    "html2canvas": "^1.4.1",
+    "ics": "^3.5.0",
+    "jspdf": "^2.5.1",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "nodemailer": "^6.9.5",

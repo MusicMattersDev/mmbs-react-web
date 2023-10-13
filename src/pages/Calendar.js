@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useRef} from 'react';
+
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin, { DateClickArg } from "@fullcalendar/interaction"
 import firebaseDb from "../firebase-config";  
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom';
 import '../App.css';
 import AddEditEvent from './AddEditEvent'
 import { IconButton, Snackbar, Alert } from "@mui/material";
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { Button } from "@mui/material";
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 
-const Calendar = () => {
+function Calendar({ showSidebar, setShowSidebar }) {
+    const navigate = useNavigate();
+    
     // whether or not the form is open
     const [openForm, setOpenForm] = useState(false);
     // whether or not the event text has been copied
@@ -23,6 +28,10 @@ const Calendar = () => {
     const { venue } = useParams();
     const [events, setEvents] = useState([]);
     const [currentEvent, setCurrentEvent] = useState({});
+    const calendarRef = useRef(null);
+    const [hoveredDay, setHoveredDay] = useState(null);
+
+
 
     // get events on render
     useEffect(() => {
@@ -131,63 +140,133 @@ const Calendar = () => {
     // used for render the copy button on each day of the calendar
     const renderCopyButton = (content) => {
         const date = content.date;
-
+    
         let year = date.toLocaleString("default", { year: "numeric" });
         let month = date.toLocaleString("default", { month: "2-digit" });
         let day = date.toLocaleString("default", { day: "2-digit" });
         let formattedDate = year + "-" + month + "-" + day;
-
+    
         return (
-            <div style={{ 
-                display: "flex",
-                height: "100%",
-                width: "100%",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                gap: "0px"
-            }}>
-                <IconButton id={formattedDate} onClick={(event) => handleCopy(event, formattedDate)}
+            <div 
+                onMouseEnter={() => setHoveredDay(formattedDate)}
+                onMouseLeave={() => setHoveredDay(null)}
+                style={{ 
+                    display: "flex",
+                    height: "100%",
+                    width: "100%",
+                    alignItems: "center",
+                    justifyContent: "flex-end",
+                    gap: "0px",
+                    position: 'relative'   // To ensure child positioning
+                }}
+            >
+                <IconButton 
+                    id={formattedDate} 
+                    onClick={(event) => handleCopy(event, formattedDate)}
                     aria-label="copy"
                     style={{
-                        padding: "3px"
-                    }}>
-                        <ContentCopyIcon />
+                        padding: "3px",
+                        visibility: hoveredDay === formattedDate ? 'visible' : 'hidden',
+                        position: 'absolute',  // Absolute positioning
+                        right: '20px',          // Positioned to the right
+                        top: '50%',            // Centered vertically
+                        transform: 'translateY(-50%)'  // Adjust for exact centering
+                    }}
+                >
+                    <ContentCopyIcon />
                 </IconButton>
                 <span style={{ marginLeft: "10px" }}>{content.dayNumberText}</span>
             </div>
-        );   
+        );
     }
+    
+    
+    
+    const downloadPDF = () => {
+      
+        html2canvas(document.querySelector('#calendar')).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            
+            // Create a new instance of jsPDF in landscape mode
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+            });
+    
+            // Get the width and height of the canvas
+            const canvasWidth = canvas.width;
+            const canvasHeight = canvas.height;
+    
+            // Calculate the width-to-height ratio
+            const canvasRatio = canvasWidth / canvasHeight;
+    
+            // Get the width and height of the PDF in points
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+    
+            // Calculate the width and height for the image
+            let imgWidth = pdfWidth;
+            let imgHeight = pdfWidth / canvasRatio;
+    
+            // If the calculated height is greater than the PDF height, adjust accordingly
+            if (imgHeight > pdfHeight) {
+                imgHeight = pdfHeight;
+                imgWidth = pdfHeight * canvasRatio;
+            }
+    
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.save("Calendar.pdf");
+        });
+    };
 
     return (
         <>
-            <div className='content'>
-                <FullCalendar
-                    events={events}
-                    plugins={[dayGridPlugin, interactionPlugin]}
-                    initialView="dayGridMonth"
-                    dateClick={handleDateClick}
-                    eventClick={handleEventClick}
-                    dayCellContent={renderCopyButton}
+            <style jsx>{`
+                .fc-event-title, .fc-event .fc-title {
+                    white-space: normal;
+                    overflow: visible;
+                    lineHeight: 1.2;
+                }
+            `}</style>
+    
+    <div className='content' >
+    
+    <Button style={{paddingLeft: '30px', paddingTop: '15px'}} onClick={() => navigate('/venues')}>
+    Return to Venues
+</Button>
+                <Button style={{paddingLeft: '30px', paddingTop: '15px'}}onClick={downloadPDF}>Download as PDF</Button>
+    
+                <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}}
+                >
+                    <FullCalendar
+                        ref={calendarRef}
+                        events={events}
+                        contentHeight="auto"
+                        plugins={[dayGridPlugin, interactionPlugin]}
+                        initialView="dayGridMonth"
+                        dateClick={handleDateClick}
+                        eventClick={handleEventClick}
+                        dayCellContent={renderCopyButton}
+                    />
+                </div>
+                
+                <AddEditEvent
+                    open={openForm}
+                    setOpen={setOpenForm}
+                    formType={formType}
+                    event={currentEvent}
                 />
-            </div>  
-            <AddEditEvent
-                open={openForm}
-                setOpen={setOpenForm}
-                formType={formType}
-                event={currentEvent}
-            >
-            </AddEditEvent>
-            <Snackbar
-                open={copied}
-                autoHideDuration={3000}
-                onClose={handleCopiedClosed}
-            >
-                <Alert onClose={handleCopiedClosed} severity="success" sx={{ width: '100%' }}>
-                    Copied Text!
-                </Alert>
-            </Snackbar>
+                
+                <Snackbar
+                    open={copied}
+                    autoHideDuration={3000}
+                    onClose={handleCopiedClosed}
+                >
+                    <Alert onClose={handleCopiedClosed} severity="success" sx={{ width: '100%' }}>
+                        Copied Text!
+                    </Alert>
+                </Snackbar>
+            </div>
         </>
-    )
-}
-
-export default Calendar;
+    );
+            };
+            export default Calendar    

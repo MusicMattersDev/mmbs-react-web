@@ -12,9 +12,8 @@
     height: 100vh;
     display: flex;
     justify-content: center;
-    position: fixed;
-    top: 0;
     transform: translateX(-100%);
+    top: 0;
     transition: 850ms;
     box-shadow: 0 2px 4px 0;
 }
