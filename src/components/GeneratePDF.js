@@ -242,8 +242,16 @@ export function DownloadConfirmations(props) {
         setConfirmations(tempConfirmations);
     }, [events]);
 
+    useEffect(() => {
+        // Reset pdfBlobs to an empty array
+        setPdfBlobs([]);
+        // Reset data to its initial state
+        setData('Generating Confirmations...');
+    }, [month, year]);
+
     // sets new data for pdf rendering when confirmations change
     useEffect(() => {
+        setPdfBlobs([]);
         let venueName = venue.name;
         const venueText = {
             "Renaissance-Exchange": "The Renaissance/ Exchange Bar"
@@ -356,8 +364,16 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
         setInvoices(tempInvoices);
     }, [events]);
 
+    useEffect(() => {
+        // Reset pdfBlobs to an empty array
+        setPdfBlobs([]);
+        // Reset data to its initial state
+        setData('Generating Confirmations...');
+    }, [month, year]);
+
     // sets new data for pdf rendering when invoices change
     useEffect(() => {
+        setPdfBlobs([]);
         let venueName = venue.name;
         const venueText = {
             "Renaissance-Exchange": "The Renaissance /Exchange Bar"
