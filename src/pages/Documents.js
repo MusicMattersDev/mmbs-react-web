@@ -16,6 +16,8 @@ function Documents() {
     // used for year selector
     const [yearsList, setYearsList] = useState();
 
+    
+
     useEffect(() => {
         // get list of venues on render
         firebaseDb.child('database/venues').on('value', snapshot => {  
