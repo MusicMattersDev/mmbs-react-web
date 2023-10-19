@@ -1,65 +1,53 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button'
-import Logo from '../assets/icon-transparent.png'
-import './LoginForm.css'
+import Button from '@mui/material/Button';
+import Logo from '../assets/icon-transparent.png';
+import './LoginForm.css';
+import './LoginPage.css';
 
 export default function LoginForm({ setPassword, setEmail, handleAction }) {
     return (
         <div className="loginPage">
-            <center>
-                <div className="heading-container">
-                        <h1>
-                            Music Matters Booking System
-                        </h1>
-                        <h1>
-                            Login Portal
-                        </h1>
-                        <div className="loginImg">
-                            <img src={ Logo } />
-                        </div>
+            <div className="loginContainer">
+                <div className="logoContainer">
+                    <img src={ Logo } alt="Music Matters Logo" />
                 </div>
-
-            <Box
-                component="form"
-                sx={{
-                    '& > :not(style)': { m: 1, width: '30ch' },
-                }}
-                noValidate
-                autoComplete="on"
-            >
-                <div>
+                <h1>Music Matters</h1>
+                
+                <Box
+                    component="form"
+                    className="formContainer"
+                    noValidate
+                    autoComplete="off"
+                >
                     <TextField
                         fullWidth
                         id="email"
                         label="Email" 
-                        variant="outlined" 
+                        variant="standard" 
                         onChange={(e) => setEmail(e.target.value)}
+                        className="inputField"
                     />
-                </div>
-                <div>
                     <TextField
                         fullWidth
                         id="password" 
                         label="Password" 
-                        variant="outlined" 
+                        variant="standard" 
                         type="password"
-                        margin="dense"
                         onChange={(e) => setPassword(e.target.value)}
+                        className="inputField"
                     />
-                </div>
-            </Box>
-            
-            <div>
-                <Button
-                    variant="contained"
-                    size="large"
-                    onClick={ handleAction }>Login
-                </Button>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        onClick={ handleAction }
+                        className="loginButton"
+                    >
+                        Login
+                    </Button>
+                </Box>
             </div>
-
-            </center>
         </div>
     );
 }
