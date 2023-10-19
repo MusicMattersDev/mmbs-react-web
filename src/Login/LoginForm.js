@@ -38,13 +38,14 @@ export default function LoginForm({ setPassword, setEmail, handleAction }) {
                         onChange={(e) => setPassword(e.target.value)}
                         className="inputField"
                     />
-                    <Button
-                        variant="contained"
-                        size="large"
-                        onClick={ handleAction }
-                        className="loginButton"
-                    >
-                        Login
+                   <Button
+                         variant="contained"
+                            size="large"
+                            onClick={ handleAction }
+                            className="loginButton"
+                            style={{ marginTop: '20px' }}  // Inline style for top padding
+                                >
+                                Login
                     </Button>
                 </Box>
             </div>
