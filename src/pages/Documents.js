@@ -6,17 +6,17 @@ import * as XLSX from "xlsx";
 
 function Documents() {
     const currentDate = new Date();
-    const months = [
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ];
-    const [month, setMonth] = useState(months[new Date().getMonth()]);
-    const [year, setYear] = useState(new Date().getFullYear());
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
+
+    const [month, setMonth] = useState(currentMonth);
+    const [year, setYear] = useState(currentYear);
     const [venues, setVenues] = useState({});
     const [events, setEvents] = useState({});
     // used for year selector
     const [yearsList, setYearsList] = useState();
 
+    
 
     useEffect(() => {
         // get list of venues on render

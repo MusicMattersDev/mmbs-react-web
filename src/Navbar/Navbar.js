@@ -34,7 +34,7 @@ function Navbar({ showSidebar: initialShowSidebar }) {
             <IconContext.Provider value={{color: '#fff'}}>
                 <nav className={sidebar ? 'nav-menu active' : 'nav-menu'}>
             <ul className='nav-menu-items'>
-                <img src={ mmlogo } alt="music matters logo"/>
+                <img src={ mmlogo } style={{ paddingLeft: '45px'}} alt="music matters logo"/>
                 <h1 className="mmtitle" style={{ textAlign: "center", paddingLeft: "0px", paddingRight: "16px" }}>Music Matters Bookings</h1>
                 
                 {SidebarData.map((item, index) => {
@@ -48,7 +48,7 @@ function Navbar({ showSidebar: initialShowSidebar }) {
                         </li>
                     )
                 } )}
-                <div className="sidebar-footer">
+                <div className="sidebar-footer" style={{ paddingBottom: '50px', paddingLeft: '20px'}}>
             <Button 
                     variant="contained"
                     size="large"

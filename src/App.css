@@ -77,3 +77,72 @@
 input{
   padding: 5px 0px 5px 10px;
 }
+
+/* Modern Button Styles */
+.button {
+  background-color: #086cbd; /* Green */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #3795f3;
+}
+
+/* Modern Input Styles */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.input-wrapper input[type="file"] {
+  margin-right: 10px;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+}
+
+
+.input-wrapper label {
+  font-weight: bold;
+}
+
+.inputs-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.button-group {
+  margin-top: 20px;
+}
+
+/* Custom File Input Styles */
+.custom-file-input {
+  display: none; /* Hide the default input */
+}
+
+.custom-file-label {
+  padding: 10px 20px;
+  background-color: #434343; /* Green */
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.custom-file-label:hover {
+  background-color: #086cbd;
+}
