@@ -267,7 +267,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                             >
                                 <strong style={{ fontSize: '16px'}}>{event.title}</strong>
                                 <br />
-                                <i style={{ fontSize: '12px' }}>{event.extendedProps.startTime} - {event.extendedProps.endTime}</i>
+                                <i style={{ fontSize: '13px' }}>{event.extendedProps.startTime} - {event.extendedProps.endTime}</i>
                             </div>
                         )}
                         contentHeight="auto"
