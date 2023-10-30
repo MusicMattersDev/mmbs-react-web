@@ -146,3 +146,8 @@ input{
 .custom-file-label:hover {
   background-color: #086cbd;
 }
+
+  .fc-toolbar-title {
+    text-align: center !important;
+    font-weight: bold !important;
+  }

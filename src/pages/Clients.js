@@ -69,8 +69,11 @@ const Clients= () => {
     }
     
     const filteredArtists = Object.keys(ClientObj).filter(key => {
-        return ClientObj[key].stage.toLowerCase().includes(query.toLowerCase()) || ClientObj[key].email.toLowerCase().includes(query.toLowerCase())
-    }).sort(sortClients);
+        const performers = ClientObj[key].performers;
+        const includesPerformer = Array.isArray(performers) && performers.some(performer => performer.toLowerCase().includes(query.toLowerCase()));
+        const includesEmail = ClientObj[key].email.toLowerCase().includes(query.toLowerCase());
+        return includesPerformer || includesEmail;
+      }).sort(sortClients);
 
 
     //----------------------------  Added on 8/30/22 -----------------------------//
@@ -238,8 +241,8 @@ const Clients= () => {
                                     <table className="table table-bordered heading-hvr">  
                                         <thead>  
                                             <tr>  
-                                                <th className="active">Stage Name</th>  
-                                                <th>Performers</th>  
+                                                <th className="active">Performers</th>  
+                                                <th>Stage Name</th>  
                                                 <th>Email</th>
                                                 <th>Split Check?</th>
                                                 <th>Bio</th>  
@@ -252,8 +255,8 @@ const Clients= () => {
                                                 // Object.keys(ClientObj).map((key) => (  
                                                 filteredArtists.map((key) => (  
                                                     <tr key={key}>  
-                                                        <td>{ClientObj[key].stage}</td> 
-                                                        <td>{ClientObj[key].performers ? ClientObj[key].performers.join(", ") : ""}</td>   
+                                                        <td>{ClientObj[key].performers ? ClientObj[key].performers.join(", ") : ""}</td>
+<td>{ClientObj[key].stage}</td>
                                                         <td>{ClientObj[key].email}</td>
                                                         <td>{ClientObj[key].splitCheck ? "Yes" : "No"}</td>
                                                         <td>{ClientObj[key].bio}</td>

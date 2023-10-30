@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
     
 const AddEditClient= (props) => {  
     const initialFieldValues = {  
-        stage: '',  
-        performers: [],
+        stage: '',
+        performers: [''], // This array has one empty string, resulting in one input box
         email: '',
-        bio: '',
-        splitCheck: false
-    }  
+        splitCheck: false,
+        bio: ''
+      }
 
     var [values, setValues] = useState(initialFieldValues)
 
@@ -28,6 +28,14 @@ const AddEditClient= (props) => {
             [name]: value  
         })
     }
+    const handlePerformerChange = (index, e) => {
+        const newPerformers = values.performers.slice();
+        newPerformers[index] = e.target.value;
+        setValues({
+          ...values,
+          performers: newPerformers
+        });
+      };
     
     const handleFormSubmit = e => {  
         e.preventDefault()  
@@ -75,31 +83,22 @@ const AddEditClient= (props) => {
                                     </div>  
                                 </div>
                                 
-                                <div className="col-12 col-md-6">  
-                                    <div className="form-group">  
-                                        <label className="col-form-label">Performers<span  
-                                            className="mandatoryFieldColor">*&nbsp;</span></label>
-                                    <button onClick={addPerformer}>&nbsp;Add Performer&nbsp;</button>
-                                        {values.performers.map((performerName, i) => (
-                                            <input
-                                                key={i}
-                                                type="text"
-                                                name="performers"
-                                                placeholder="Input performer name"
-                                                value={performerName}
-                                                onChange={e => {
-                                                const newPerformers = [...values.performers]
-                                                newPerformers[i] = e.target.value
-                                                setValues({
-                                                    ...values,
-                                                    performers: newPerformers
-                                                })
-                                                }}
-                                            />
-                                        ))}
-
-                                    </div>  
-                                </div> 
+                                <div className="col-12 col-md-6">
+        <div className="form-group">
+          <label className="col-form-label">Performers<span className="mandatoryFieldColor">*&nbsp;</span></label>
+          {values.performers.map((performer, index) => (
+            <input
+            key={index}
+            type="text"
+            className="form-control"
+            placeholder="Input performer name"
+            value={performer}
+            onChange={(e) => handlePerformerChange(index, e)}
+          />
+          ))}
+          <button type="button" onClick={addPerformer}>&nbsp;Add Performer&nbsp;</button>
+        </div>
+      </div>
                                 
                                 <div className="col-12 col-md-6">  
                                     <div className="form-group">  

@@ -118,7 +118,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
             console.log("eventsOnDay", {eventsOnDay});
             console.log("eventOnDay", {eventOnDay});
             console.log("start", {start});
-            copyText += ((start.charAt(0) === "0") ? start.substring(1) : start)  + " to " + ((end.charAt(0) === "0") ? end.substring(1) : end) + "\n";
+            copyText += to12HourFormat(start) + " to " + to12HourFormat(end) + "\n";
             console.log("copyText",{copyText});
         })
         // write text to clipboard
@@ -197,7 +197,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                         padding: "3px",
                         visibility: hoveredDay === formattedDate ? 'visible' : 'hidden',
                         position: 'absolute',  // Absolute positioning
-                        right: '20px',          // Positioned to the right
+                        right: '8px',          // Positioned to the right
                         top: '50%',            // Centered vertically
                         transform: 'translateY(-50%)'  // Adjust for exact centering
                     }}
@@ -270,7 +270,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
     <div className='content' >
     <div className='calendarButtons' style={{paddingLeft: '30px', paddingTop:'15px'}}>
 
-                <Button variant="contained" startIcon={<KeyboardDoubleArrowLeftIcon />}  onClick={() => navigate('/venues')}> Return to Venues </Button>
+                <Button style={{ paddingRight: '30px' }}  startIcon={<KeyboardDoubleArrowLeftIcon />}  onClick={() => navigate('/venues')}> Return to Venues </Button>
                 <Button variant="contained" endIcon ={<DownloadIcon />} onClick={downloadPDF}>Download as PDF</Button>
     </div>
                 <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}}
@@ -288,9 +288,9 @@ function Calendar({ showSidebar, setShowSidebar }) {
                                     height: '100%',
                                 }}
                             >
-                                <strong style={{ fontSize: '16px'}}>{event.title}</strong>
+                                <strong style={{ fontSize: '16px', color: 'black' }}>{event.title}</strong>
                                 <br />
-                                <i style={{ fontSize: '13px' }}>{event.extendedProps.startTime} - {event.extendedProps.endTime}</i>
+                                <i style={{ fontSize: '14px', fontWeight: 'bold' }}>{to12HourFormat(event.extendedProps.startTime)} - {to12HourFormat(event.extendedProps.endTime)}</i>
                             </div>
                         )}
                         contentHeight="auto"
