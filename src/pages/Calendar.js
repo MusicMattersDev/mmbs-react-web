@@ -279,6 +279,11 @@ function Calendar({ showSidebar, setShowSidebar }) {
                     <FullCalendar
                         ref={calendarRef}
                         events={events}
+                        headerToolbar={{
+                            center: 'title',
+                            right: 'prev,next today',
+                            left: 'prev,next today'
+                        }}
                         eventContent={({ event }) => (
                             <div 
                                 style={{ 
