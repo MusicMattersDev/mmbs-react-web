@@ -3,8 +3,7 @@ import firebaseDb from "../firebase-config";
 import { FormControl, InputLabel, Select, MenuItem, Stack } from '@mui/material';
 import AddEditClient from './AddEditClient';  
 import * as XLSX from "xlsx";
-
-
+import backgroundImage from '../assets/background.jpg'; // Adjust the path as needed
 
 const Clients= () => {  
   
@@ -209,16 +208,22 @@ const Clients= () => {
     //----------------------------------------------------------------------------//
 
     return (  
-        <div className="content">  
+        <div className="content" style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            height: '100vh' // Adjust the height as needed
+        }}>  
             <div className="card-body pb-0">  
-                <div className="card">  
-                    <div className="card-header main-search dash-search">  
+                <div className="card" >  
+                    <div className="card-header main-search dash-search" >  
                         <h3>  
                             Client Information Details 
                         </h3>  
                     </div>  
                 </div>  
-                <div className="row">  
+                <div className="row" >  
                     <AddEditClient {...({ currentId, ClientObj, addOrEdit })}></AddEditClient>
                     <div className="col-12 col-md-12">  
                         <div className="card">  
@@ -256,7 +261,7 @@ const Clients= () => {
                                                 filteredArtists.map((key) => (  
                                                     <tr key={key}>  
                                                         <td>{ClientObj[key].performers ? ClientObj[key].performers.join(", ") : ""}</td>
-<td>{ClientObj[key].stage}</td>
+                                                        <td>{ClientObj[key].stage}</td>
                                                         <td>{ClientObj[key].email}</td>
                                                         <td>{ClientObj[key].splitCheck ? "Yes" : "No"}</td>
                                                         <td>{ClientObj[key].bio}</td>
