@@ -17,7 +17,6 @@ export default function FormDialog(props) {
     const tempMonth = (date !== undefined) ? new Date(event.date.replace(/-/g, '/')).toLocaleString('default', { month: 'long' }) : "";
     const tempYear = (date !== undefined) ? new Date(event.date.replace(/-/g, '/')).getFullYear() : "";
     // tempDay = Monday, Tuesday, etc.
-    const tempDay = (date !== undefined) ? new Date(event.date.replace(/-/g, '/')).toLocaleString('default', { weekday: 'long' }) : "";
     // dayOfWeek - Monday is 1
     const dayOfWeek = (date !== undefined) ? new Date(event.date).getDay()+1 : "";
     const [weekDay, setWeekDay] = useState(new Date(event.date).getDay()+1);
@@ -35,7 +34,6 @@ export default function FormDialog(props) {
     // logic for whether or not custom time or price fields are shown
     const [isTimeCustom, setIsTimeCustom] = React.useState(false);
     const [isPriceCustom, setIsPriceCustom] = React.useState(false);
-    const [isFirstSpotTaken, setIsFirstSpotTaken] = React.useState(false);
     // default booking times based on days variables
     const d = new Date();
     let day = d.getDay();
@@ -283,7 +281,7 @@ export default function FormDialog(props) {
                                     fullWidth
                                     variant="standard"
                                     required
-                                    inputRef={input => input && input.focus()}
+                                    // inputRef={input => input && input.focus()}
                                     // onChange={(event) => { setStage(event.target.value) }}
                                     // inputProps={{
                                     //     name: "stage" // make sure to set the name attribute
