@@ -56,7 +56,7 @@ const Venues= () => {
     }  
   
     return (  
-        <div className="content"> 
+        <div className="content" > 
             <div className="card">   
             <div className="card-body pb-0">  
                 <div className="card">  

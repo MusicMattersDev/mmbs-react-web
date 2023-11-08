@@ -16,6 +16,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 
+
 function Calendar({ showSidebar, setShowSidebar }) {
     const navigate = useNavigate();
     
@@ -273,7 +274,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                 <Button style={{ paddingRight: '30px' }}  startIcon={<KeyboardDoubleArrowLeftIcon />}  onClick={() => navigate('/venues')}> Return to Venues </Button>
                 <Button variant="contained" endIcon ={<DownloadIcon />} onClick={downloadPDF}>Download as PDF</Button>
     </div>
-                <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}}
+                <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}} 
                 >
                     <div className="calendar-container">
                     <FullCalendar

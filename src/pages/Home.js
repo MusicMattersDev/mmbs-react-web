@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
-import mmlogo from '../assets/icon-transparent.png';
+import backgroundImage from '../assets/background.jpg'; // Adjust the path as needed
+
 
 const Home = () => {
     const [isAuth, setIsAuth] = useState(false);
@@ -10,9 +11,9 @@ const Home = () => {
     const [invoicesZip, setInvoicesZip] = useState(null);
     const [confirmationsZip, setConfirmationsZip] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
-    const [xlsxFileName, setXlsxFileName] = useState("Choose .XLSX File");
-const [invoicesZipName, setInvoicesZipName] = useState("Choose Invoices");
-const [confirmationsZipName, setConfirmationsZipName] = useState("Choose Confirmations");
+    const [xlsxFileName, setXlsxFileName] = useState("Choose Excel File for Emailing the Client Confirmations");
+const [invoicesZipName, setInvoicesZipName] = useState("Choose the Invoices Zip File for the Month");
+const [confirmationsZipName, setConfirmationsZipName] = useState("Choose the Confirmations Zip File for the Month");
 
 
     // Placeholder: Replace with your actual client ID from the Google Developer Console
@@ -252,10 +253,18 @@ const handleDedicatedUpload = async () => {
 
  
   return (
-    <div className='home'>
+    
+    <div className='home'style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            height: '100vh' // Adjust the height as needed
+        }}>
+
         <center style={{ paddingTop: '100px'}}>
             <h1>Welcome to the Music Matters Booking System </h1>
-            <p>-R10.8.23</p>
+            <p>-R11.2.23</p>
 
             {gapiLoaded ? (
                 !isAuth ? (

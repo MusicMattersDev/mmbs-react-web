@@ -151,14 +151,13 @@ function Documents() {
     
                         excelData.push({
                             "Email": email,
-                            "Attachment1": invoiceFileName,
-                            "Attachment2": confirmationFileName
+                            "Attachment1": confirmationFileName
                         });
                     });
     
                     excelData.sort((a, b) => {
                         const extractDateComponents = (filename) => {
-                            const datePart = filename.split("Booking Invoice-")[1];
+                            const datePart = filename.split("-Artist Confirmation-")[1];
                             const month = datePart.split(",")[1].trim().split(" ")[0];
                             const day = parseInt(datePart.split(",")[1].trim().split(" ")[1], 10);
                             const year = parseInt(datePart.split(",")[2].trim(), 10);
@@ -179,17 +178,17 @@ function Documents() {
                     const wb = XLSX.utils.book_new();
                     const ws = XLSX.utils.json_to_sheet(excelData);
                     XLSX.utils.book_append_sheet(wb, ws, "Data");
-                    XLSX.writeFile(wb, month + " GMass Data.xlsx");
+                    XLSX.writeFile(wb, month + " Artist Confirmations Email File.xlsx");
                 });
             });
         });
     }
    
     return (
-        <div className='content'>
+        <div className='content' >
             {/* Card containing all other cards */}
             
-            <div className="card">
+            <div className="card" >
                 {/* Header displaying which month and year the documents are for */}
                 <div className="card-header main-search dash-search"> 
                     <Stack
@@ -200,7 +199,7 @@ function Documents() {
                     >
                           
                         <h3>{month} {year} - Documents</h3>
-                        <Button variant = "contained" onClick={() => generateAndDownloadExcel(month, year)}>Download GMass Data</Button>
+                        <Button variant = "contained" onClick={() => generateAndDownloadExcel(month, year)}>Download Monthly Artist Confitmation Email Data</Button>
 
                         <div style={{flex: '1 0 0'}} />
                         {/* Month Selector */}
