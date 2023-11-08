@@ -283,7 +283,6 @@ export default function FormDialog(props) {
                                     fullWidth
                                     variant="standard"
                                     required
-                                    inputRef={input => input && input.focus()}
                                     // onChange={(event) => { setStage(event.target.value) }}
                                     // inputProps={{
                                     //     name: "stage" // make sure to set the name attribute
