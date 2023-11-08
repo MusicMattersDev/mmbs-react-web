@@ -216,15 +216,14 @@ const Clients= () => {
             height: '100vh' // Adjust the height as needed
         }}>  
             <div className="card-body pb-0">  
-                <div className="card" >  
-                    <div className="card-header main-search dash-search" >  
+                <div className="card" style={{ position: 'sticky', top: 0, zIndex: 1000 }}>  
+                    <div className="card-header main-search dash-search"  >  
                         <h3>  
-                            Client Information Details 
+                            Client Information Details  <AddEditClient {...({ currentId, ClientObj, addOrEdit })}></AddEditClient>
                         </h3>  
                     </div>  
                 </div>  
-                <div className="row" >  
-                    <AddEditClient {...({ currentId, ClientObj, addOrEdit })}></AddEditClient>
+                <div className="row" >                   
                     <div className="col-12 col-md-12">  
                         <div className="card">  
                             <div className="card-header">Client Search</div>
