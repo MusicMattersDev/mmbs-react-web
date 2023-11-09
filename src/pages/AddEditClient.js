@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Stack } from "@mui/material";
+import React, { useState, useRef, useEffect } from "react";
+import { Button, Dialog, DialogContent, DialogTitle, Stack } from "@mui/material";
 
 const AddEditClient = (props) => {
   const initialFieldValues = {
@@ -11,19 +11,22 @@ const AddEditClient = (props) => {
   };
 
   var [values, setValues] = useState(initialFieldValues);
-  const [showForm, setShowForm] = useState(false);
+
+  const initialFieldValuesRef = useRef(initialFieldValues);
+
 
   useEffect(() => {
     const clientData =
       props.currentId === ""
-        ? initialFieldValues
+        ? initialFieldValuesRef.current
         : props.ClientObj[props.currentId] || {};
     setValues({
-      ...initialFieldValues,
+      ...initialFieldValuesRef.current,
       ...clientData,
-      performers: clientData.performers || initialFieldValues.performers,
+      performers: clientData.performers || initialFieldValuesRef.current.performers,
     });
   }, [props.currentId, props.ClientObj]);
+  
 
   const handleInputChange = (e) => {
     var { name, value } = e.target;
@@ -61,10 +64,6 @@ const AddEditClient = (props) => {
       ...values,
       [name]: checked,
     });
-  };
-
-  const toggleFormDisplay = () => {
-    setShowForm(!showForm);
   };
 
   const [open, setOpen] = useState(false);
