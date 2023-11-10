@@ -151,7 +151,8 @@ function Documents() {
     
                         excelData.push({
                             "Email": email,
-                            "Attachment1": confirmationFileName
+                            "Attachment1": confirmationFileName,
+                            "SubjectLine": confirmationFileName.replace(".pdf", "") // Removing ".pdf" from the filename
                         });
                     });
     

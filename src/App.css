@@ -104,6 +104,9 @@ input{
   align-items: center;
   margin-bottom: 10px;
 }
+.file-selected {
+  outline: 4px solid lightskyblue;
+}
 
 .input-wrapper input[type="file"] {
   margin-right: 10px;
