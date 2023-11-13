@@ -345,12 +345,13 @@ const convertAndUpload = async (file, accessToken, folderId) => {
             {gapiLoaded ? (
                 !isAuth ? (
                     <div style={{ paddingTop: '200px'}}>
-                        <h4>Upload Files to Google Drive for Sending Confitmation Emails</h4>
                         <button className="button" onClick={handleAuthClick}>Sign in with Google</button>
                     </div>
                 ) : (
                     <div className="inputs-container" style={{ paddingTop: '150px'}}>
-                        <div className="input-wrapper">
+                    <h5>Upload Files for Sending Confirmation Emails</h5>
+
+                        <div style={{ paddingTop: '25px'}} className="input-wrapper">
                             <input type="file" id="xlsxFileInput" className="custom-file-input" accept=".xlsx" onChange={handleXlsxFileChange} />
                             <label htmlFor="xlsxFileInput" className="custom-file-label">{xlsxFileName}</label>
                         </div>

@@ -5,7 +5,7 @@ import * as AiIcons from 'react-icons/ai'
 
 export const SidebarData = [
     {
-        title: 'About',
+        title: 'Email Setup',
         path: '/home',
         icon: <AiIcons.AiFillHome />,
         cName: 'nav-text'
