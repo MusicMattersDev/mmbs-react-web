@@ -58,6 +58,10 @@ const Home = () => {
         };
     }, []);
 
+    const openGmail = () => {
+        window.open('https://gmail.com', '_blank');
+    };
+
     const updateSigninStatus = (isSignedIn) => {
         setIsAuth(isSignedIn);
     };
@@ -363,6 +367,8 @@ const convertAndUpload = async (file, accessToken, folderId) => {
                         <div className="button-group">
                             <button className="button" onClick={handleDedicatedUpload}>Upload to Drive</button>
                             <button className="button" onClick={handleSignOutClick}>Sign Out</button>
+                            <button className="button" onClick={openGmail}>Open Gmail</button>
+
                             </div>
                             {isUploading && <p style={{ marginTop: '20px' }}>Upload in Progress...</p>} {/* Display message when uploading */}
                         </div>
