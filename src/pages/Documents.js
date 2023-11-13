@@ -99,7 +99,9 @@ function Documents() {
         const startDate = new Date(Date.UTC(year, parseInt(monthNumber) - 1, 1));
         const endDate = new Date(Date.UTC(year, parseInt(monthNumber), 0, 23, 59, 59, 999)); // Up to the last millisecond of the last day of the month
 
-    
+        let staticEmail = "musicmattersbookings@gmail.com"; // Static email for all rows
+
+
         const startDateString = `${startDate.getUTCFullYear()}-${("0" + (startDate.getUTCMonth() + 1)).slice(-2)}-${("0" + startDate.getUTCDate()).slice(-2)}`;
         const endDateString = `${endDate.getUTCFullYear()}-${("0" + (endDate.getUTCMonth() + 1)).slice(-2)}-${("0" + endDate.getUTCDate()).slice(-2)}`;
     
@@ -146,11 +148,11 @@ function Documents() {
     
                         let timeSuffix = (event.startTime === "17:00" ? " #1" : " #2");
                         let formattedDate = formatDateToCustomFormat(event.date);
-                        let invoiceFileName = venueName + " Booking Invoice-" + formattedDate + timeSuffix + ".pdf";
                         let confirmationFileName = venueName + "-Artist Confirmation-" + formattedDate + timeSuffix + ".pdf";
     
                         excelData.push({
-                            "Email": email,
+                            "EmailAddress": staticEmail,
+                            "Bcc": email, // Original client email is now in the BCC column
                             "Attachment1": confirmationFileName,
                             "SubjectLine": confirmationFileName.replace(".pdf", "") // Removing ".pdf" from the filename
                         });

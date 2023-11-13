@@ -95,43 +95,45 @@ const AddEditClient = (props) => {
               <div className="card-body">
                 <div className="center-form">
                   <div className="row">
+                    {/* Performers Input Field */}
                     <div className="col-12 col-md-6">
-                      <div className="form-group">
-                        <label className="col-form-label">
-                          Stage Name
-                          <span className="mandatoryFieldColor">*</span>
-                        </label>
-                        <input
-                          value={values.stage}
-                          onChange={handleInputChange}
-                          type="text"
-                          className="form-control"
-                          name="stage"
-                        />
-                      </div>
-                    </div>
+                                            <div className="form-group">
+                                                <label className="col-form-label">
+                                                    Performers
+                                                    <span className="mandatoryFieldColor">*&nbsp;</span>
+                                                </label>
+                                                {values.performers.map((performer, index) => (
+                                                    <input
+                                                        key={index}
+                                                        type="text"
+                                                        className="form-control"
+                                                        placeholder="Input performer name"
+                                                        value={performer}
+                                                        onChange={(e) => handlePerformerChange(index, e)}
+                                                    />
+                                                ))}
+                                                <button type="button" onClick={addPerformer}>
+                                                    &nbsp;Add Performer&nbsp;
+                                                </button>
+                                            </div>
+                                        </div>
 
-                    <div className="col-12 col-md-6">
-                      <div className="form-group">
-                        <label className="col-form-label">
-                          Performers
-                          <span className="mandatoryFieldColor">*&nbsp;</span>
-                        </label>
-                        {values.performers.map((performer, index) => (
-                          <input
-                            key={index}
-                            type="text"
-                            className="form-control"
-                            placeholder="Input performer name"
-                            value={performer}
-                            onChange={(e) => handlePerformerChange(index, e)}
-                          />
-                        ))}
-                        <button type="button" onClick={addPerformer}>
-                          &nbsp;Add Performer&nbsp;
-                        </button>
-                      </div>
-                    </div>
+                                        {/* Stage Name Input Field */}
+                                        <div className="col-12 col-md-6">
+                                            <div className="form-group">
+                                                <label className="col-form-label">
+                                                    Stage Name
+                                                    <span className="mandatoryFieldColor">*</span>
+                                                </label>
+                                                <input
+                                                    value={values.stage}
+                                                    onChange={handleInputChange}
+                                                    type="text"
+                                                    className="form-control"
+                                                    name="stage"
+                                                />
+                                            </div>
+                                        </div>
 
                     <div className="col-12 col-md-6">
                       <div className="form-group">

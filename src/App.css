@@ -7,7 +7,7 @@
   font-family: sans-serif;
 }
 .progress-bar {
-  background-color: #e0e0e0;
+  background-color: #ff6200;
   height: 20px;
   width: 100%;
   margin-top: 10px;
@@ -105,7 +105,7 @@ input{
   margin-bottom: 10px;
 }
 .file-selected {
-  outline: 4px solid lightskyblue;
+  outline: 4px solid #086cbd;
 }
 
 .input-wrapper input[type="file"] {

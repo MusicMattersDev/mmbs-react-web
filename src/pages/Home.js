@@ -8,51 +8,55 @@ const Home = () => {
     const [gapiLoaded, setGapiLoaded] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [xlsxFile, setXlsxFile] = useState(null);
-    const [invoicesZip, setInvoicesZip] = useState(null);
     const [confirmationsZip, setConfirmationsZip] = useState(null);
     const [xlsxFileName, setXlsxFileName] = useState("Choose Excel File for Emailing the Client Confirmations");
-const [invoicesZipName, setInvoicesZipName] = useState("Choose the Invoices Zip File for the Month");
-const [confirmationsZipName, setConfirmationsZipName] = useState("Choose the Confirmations Zip File for the Month");
-
+    const [confirmationsZipName, setConfirmationsZipName] = useState("Choose the Confirmations Zip File for the Month");
+    const [isUploading, setIsUploading] = useState(false); // New state variable to track upload status
 
     // Placeholder: Replace with your actual client ID from the Google Developer Console
     const CLIENT_ID = '939526187420-7a8ta7e1edm7hl7hms08ss3vm1j5esjg.apps.googleusercontent.com';
-    const DISCOVERY_DOCS = [
-        "https://sheets.googleapis.com/$discovery/rest?version=v4",
-        "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"
-    ];
+    
     const SCOPES = "https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/drive.file";
 
     useEffect(() => {
-        // Dynamically load the Google API script and set its onload callback
+        const DISCOVERY_DOCS = [
+            "https://sheets.googleapis.com/$discovery/rest?version=v4",
+            "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"
+        ];
+
+        const initClient = () => {
+            window.gapi.client.init({
+                discoveryDocs: DISCOVERY_DOCS,
+                clientId: CLIENT_ID,
+                scope: SCOPES
+            }).then(() => {
+                setIsAuth(window.gapi.auth2.getAuthInstance().isSignedIn.get());
+                window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+                setGapiLoaded(true);
+            }).catch(error => {
+                console.error("Error initializing Google API client:", error);
+            });
+        };
+
+
+        const handleClientLoad = () => {
+            window.gapi.load('client:auth2', initClient);
+        };
+        // Dynamically load the Google API script
         const script = document.createElement('script');
         script.src = "https://apis.google.com/js/api.js";
-        script.onload = handleClientLoad;
+        
+        // Set the onload event handler
+        script.onload = () => {
+            handleClientLoad();
+        };
+    
         document.body.appendChild(script);
-
+    
         return () => {
             document.body.removeChild(script);
         };
     }, []);
-
-    const handleClientLoad = () => {
-        window.gapi.load('client:auth2', initClient);
-    };
-
-
-    const initClient = () => {
-        window.gapi.client.init({
-            discoveryDocs: DISCOVERY_DOCS,
-            clientId: CLIENT_ID,
-            scope: SCOPES
-        }).then(() => {
-            setIsAuth(window.gapi.auth2.getAuthInstance().isSignedIn.get());
-            window.gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-            setGapiLoaded(true);
-        }).catch(error => {
-            console.error("Error initializing Google API client:", error);
-        });
-    };
 
     const updateSigninStatus = (isSignedIn) => {
         setIsAuth(isSignedIn);
@@ -79,16 +83,7 @@ const [confirmationsZipName, setConfirmationsZipName] = useState("Choose the Con
         // Add orange outline to the button
         document.querySelector("label[for='xlsxFileInput']").classList.add("file-selected");
     };
-    
-    const handleInvoicesZipChange = (event) => {
-        const file = event.target.files[0];
-        console.log("Selected Invoices file:", file.name);  // Debugging line
-        setInvoicesZip(file);
-        setInvoicesZipName(file.name);
-
-        document.querySelector("label[for='invoicesZipInput']").classList.add("file-selected");
-
-    };
+   
     
     const handleConfirmationsZipChange = (event) => {
         const file = event.target.files[0];
@@ -100,7 +95,6 @@ const [confirmationsZipName, setConfirmationsZipName] = useState("Choose the Con
 
     };
     
-
     const unzipAndExtractFiles = async (zipFile) => {
       const jszip = new JSZip();
       const fileData = await zipFile.arrayBuffer();
@@ -158,10 +152,7 @@ const getFolderId = async (folderName, accessToken) => {
     }
 };
 
-
-
-const uploadFileToDrive = async (file, accessToken, folderId) => {
-    let totalFiles = 0; // Define totalFiles
+const uploadFileToDrive = async (file, accessToken, folderId, totalFiles) => {
     let uploadedFiles = 0; // Define uploadedFiles
     const form = new FormData();
     form.append('metadata', new Blob([JSON.stringify({
@@ -179,7 +170,7 @@ const uploadFileToDrive = async (file, accessToken, folderId) => {
         body: form,
     }, (progress) => {
       // Calculate the aggregated progress
-      const aggregatedProgress = (uploadedFiles + progress) / totalFiles * 100;
+      const aggregatedProgress = (uploadedFiles + progress / totalFiles) * 100;
       setUploadProgress(aggregatedProgress);
   });
 
@@ -193,94 +184,99 @@ const uploadFileToDrive = async (file, accessToken, folderId) => {
 };
 
 const checkFileExists = async (fileName, folderId, accessToken) => {
-    const nameWithoutExtension = fileName.replace(/\.[^/.]+$/, ""); // Remove the extension
-    const query = `name contains '${nameWithoutExtension}' and '${folderId}' in parents`;
-    const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(query)}`, {
-        headers: {
-            'Authorization': 'Bearer ' + accessToken
+    try {
+        const baseFileName = fileName.replace(/\.[^/.]+$/, ""); // Remove file extension
+        const safeFileName = encodeURIComponent(baseFileName);
+
+        // Check if a file with a similar name exists
+        const query = `name contains '${safeFileName}' and '${folderId}' in parents`;
+
+        const response = await fetch(`https://www.googleapis.com/drive/v3/files?q=${query}`, {
+            headers: {
+                'Authorization': 'Bearer ' + accessToken
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error in Google Drive API: ${response.statusText}`);
         }
-    });
 
-    const result = await response.json();
-    return result.files.length > 0;
+        const result = await response.json();
+        return result.files.length > 0;
+    } catch (error) {
+        console.error("Error checking if file exists in Google Drive:", error);
+        return false;
+    }
 };
-
 
 
 const handleDedicatedUpload = async () => {
+    setIsUploading(true);
     const accessToken = window.gapi.auth.getToken().access_token;
-    let uploadedFiles = 0;
 
-    // Update the progress bar
-    const updateProgress = (totalFiles) => {
-        const aggregatedProgress = (uploadedFiles / totalFiles) * 100;
-        setUploadProgress(aggregatedProgress);
-    };
+    // Folder names including year
+    const currentYear = new Date().getFullYear();
+    const xlsxFolderName = `ExcelFiles-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
+    const confirmationsFolderName = `Confirmations-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
 
-// Folder name for .xlsx files
-const xlsxFolderName = `ExcelFiles-${new Date().toLocaleString('default', { month: 'long' })}-${new Date().getFullYear()}`;
-const xlsxFolderId = await getFolderId(xlsxFolderName, accessToken);
-
-    // Create and get folder ID for confirmations
-    const confirmationsFolderName = `Confirmations-${new Date().toLocaleString('default', { month: 'long' })}-${new Date().getFullYear()}`;
+    // Get folder IDs
+    const xlsxFolderId = await getFolderId(xlsxFolderName, accessToken);
     const confirmationsFolderId = await getFolderId(confirmationsFolderName, accessToken);
 
-    // Create and get folder ID for invoices
-    const invoicesFolderName = `Invoices-${new Date().toLocaleString('default', { month: 'long' })}-${new Date().getFullYear()}`;
-    const invoicesFolderId = await getFolderId(invoicesFolderName, accessToken);
+    // Check for duplicates first
+    let duplicateFound = false;
+    let totalFiles = 0; // Initialize totalFiles
 
-    let totalFiles = 0;
-    if (invoicesZip) {
-        const invoiceFiles = await unzipAndExtractFiles(invoicesZip);
-        totalFiles += invoiceFiles.length;
-    }
-    if (confirmationsZip) {
-        const confirmationFiles = await unzipAndExtractFiles(confirmationsZip);
-        totalFiles += confirmationFiles.length;
+    if (xlsxFile && await checkFileExists(xlsxFile.name, xlsxFolderId, accessToken)) {
+        alert('Excel file already exists in Drive.');
+        duplicateFound = true;
     }
 
-    // Upload logic for each file type
-    if (xlsxFile) {
-        const xlsxExists = await checkFileExists(xlsxFile.name, xlsxFolderId, accessToken);
-        if (!xlsxExists) {
-            await convertAndUpload(xlsxFile, accessToken, xlsxFolderId); // Pass the folder ID here
-            uploadedFiles++;
-            updateProgress(totalFiles);
-        } else {
-            alert('Excel file already exists in Drive.');
+    const confirmationFiles = confirmationsZip ? await unzipAndExtractFiles(confirmationsZip) : [];
+    totalFiles += confirmationFiles.length; // Add confirmation files count to totalFiles
+
+    if (!duplicateFound) {
+        if (xlsxFile) {
+            totalFiles++; // Add xlsxFile to totalFiles count
+            await convertAndUpload(xlsxFile, accessToken, xlsxFolderId);
         }
-    }
 
-    if (invoicesZip) {
-        const invoiceFiles = await unzipAndExtractFiles(invoicesZip);
-        for (let file of invoiceFiles) {
-            // Check if invoice file already exists
-            const fileExists = await checkFileExists(file.name, invoicesFolderId, accessToken);
-            if (!fileExists) {
-                await uploadFileToDrive(file, accessToken, invoicesFolderId);
-                uploadedFiles++;
-                updateProgress(totalFiles);
-            } else {
-                alert(`Invoice file "${file.name}" already exists in Drive.`);
+        for (let file of confirmationFiles) {
+            if (await checkFileExists(file.name, confirmationsFolderId, accessToken)) {
+                alert(`Confirmation file "${file.name}" already exists in Drive.`);
+                duplicateFound = true;
+                break; // Stop the upload process
             }
         }
-    }
 
-    if (confirmationsZip) {
-        const confirmationFiles = await unzipAndExtractFiles(confirmationsZip);
-        for (let file of confirmationFiles) {
-            // Check if confirmation file already exists
-            const fileExists = await checkFileExists(file.name, confirmationsFolderId, accessToken);
-            if (!fileExists) {
+        if (!duplicateFound) {
+            let uploadedFiles = 0; // Initialize uploadedFiles
+
+            // Upload xlsxFile if it exists and is not a duplicate
+            if (xlsxFile) {
+                uploadedFiles++;
+                setUploadProgress((uploadedFiles / totalFiles) * 100);
+            }
+
+            // Upload confirmation files if they exist and are not duplicates
+            for (let file of confirmationFiles) {
                 await uploadFileToDrive(file, accessToken, confirmationsFolderId);
                 uploadedFiles++;
-                updateProgress(totalFiles);
-            } else {
-                alert(`Confirmation file "${file.name}" already exists in Drive.`);
+                setUploadProgress((uploadedFiles / totalFiles) * 100);
             }
+
+            alert('Upload Complete. Confirmations are now ready to be sent out!');
+        } else {
+            alert("Upload Canceled: Duplicate file found.");
         }
+    } else {
+        alert("Upload Canceled: Duplicate file found.");
     }
+
+    setIsUploading(false); // End uploading
 };
+
+
 
 const convertAndUpload = async (file, accessToken, folderId) => {
     const form = new FormData();
@@ -301,6 +297,8 @@ const convertAndUpload = async (file, accessToken, folderId) => {
         });
 
     };
+
+
 
     const fetchWithProgress = (url, options, onProgress) => {
       return new Promise((resolve, reject) => {
@@ -341,13 +339,13 @@ const convertAndUpload = async (file, accessToken, folderId) => {
         }}>
 
         <center style={{ paddingTop: '100px'}}>
-            <h1>Welcome to the Music Matters Booking System </h1>
-            <p>-R11.2.23</p>
+            <h1>Welcome to the Music Matters Booking System</h1>
+            <p>-R11.13.23</p>
 
             {gapiLoaded ? (
                 !isAuth ? (
                     <div style={{ paddingTop: '200px'}}>
-                        <h4>Upload Files to Google Drive</h4>
+                        <h4>Upload Files to Google Drive for Sending Confitmation Emails</h4>
                         <button className="button" onClick={handleAuthClick}>Sign in with Google</button>
                     </div>
                 ) : (
@@ -356,10 +354,7 @@ const convertAndUpload = async (file, accessToken, folderId) => {
                             <input type="file" id="xlsxFileInput" className="custom-file-input" accept=".xlsx" onChange={handleXlsxFileChange} />
                             <label htmlFor="xlsxFileInput" className="custom-file-label">{xlsxFileName}</label>
                         </div>
-                        <div className="input-wrapper">
-                            <input type="file" id="invoicesZipInput" className="custom-file-input" accept=".zip" onChange={handleInvoicesZipChange} />
-                            <label htmlFor="invoicesZipInput" className="custom-file-label">{invoicesZipName}</label>
-                        </div>
+                       
                         <div className="input-wrapper">
                             <input type="file" id="confirmationsZipInput" className="custom-file-input" accept=".zip" onChange={handleConfirmationsZipChange} />
                             <label htmlFor="confirmationsZipInput" className="custom-file-label">{confirmationsZipName}</label>
@@ -367,8 +362,9 @@ const convertAndUpload = async (file, accessToken, folderId) => {
                         <div className="button-group">
                             <button className="button" onClick={handleDedicatedUpload}>Upload to Drive</button>
                             <button className="button" onClick={handleSignOutClick}>Sign Out</button>
+                            </div>
+                            {isUploading && <p style={{ marginTop: '20px' }}>Upload in Progress...</p>} {/* Display message when uploading */}
                         </div>
-                    </div>
                 )
             ) : (
                 <p>Loading...</p>
