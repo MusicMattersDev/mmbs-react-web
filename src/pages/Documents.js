@@ -75,6 +75,7 @@ function Documents() {
             venueCard.style.display = "none";
         }
     };
+    
 
     function formatDateToCustomFormat(dateString) {
         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thur', 'Fri', 'Sat'];
@@ -202,7 +203,7 @@ function Documents() {
                     >
                           
                         <h3>{month} {year} - Documents</h3>
-                        <Button variant = "contained" onClick={() => generateAndDownloadExcel(month, year)}>Download Monthly Artist Confitmation Email Data</Button>
+                        <Button variant = "contained" onClick={() => generateAndDownloadExcel(month, year)}>Download Monthly Artist Confirmation Email Data</Button>
 
                         <div style={{flex: '1 0 0'}} />
                         {/* Month Selector */}

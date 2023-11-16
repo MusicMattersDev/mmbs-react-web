@@ -663,6 +663,20 @@ export function ArtistConfirmation(props) {
     const [confirmations, setConfirmations] = useState([]);
     const [data, setData] = useState(<></>);
 
+    function formatDayOfWeek(date) {
+        const daysOfWeek = {
+          'Sunday': 'Sun',
+          'Monday': 'Mon',
+          'Tuesday': 'Tue',
+          'Wednesday': 'Wed',
+          'Thursday': 'Thur',
+          'Friday': 'Fri',
+          'Saturday': 'Sat'
+        };
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+        return daysOfWeek[dayName];
+      }
+
     // get list of events when month or venueID changes
     useEffect(() => {
         firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {  
@@ -680,8 +694,9 @@ export function ArtistConfirmation(props) {
         if (events !== null && Object.keys(events).length !== 0) {
             tempConfirmations = Object.keys(events).map((key) => {
                 const start = new Date(events[key].start);
+                const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
-                const dateStr = start.toLocaleDateString(undefined, dateOptions);
+                const dateStr =`${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
                 const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
         
                 return {
@@ -760,6 +775,20 @@ export function ArtistInvoice(props) {
     const [invoices, setInvoices] = useState([]);
     const [data, setData] = useState(<></>);
 
+    function formatDayOfWeek(date) {
+        const daysOfWeek = {
+          'Sunday': 'Sun',
+          'Monday': 'Mon',
+          'Tuesday': 'Tue',
+          'Wednesday': 'Wed',
+          'Thursday': 'Thur',
+          'Friday': 'Fri',
+          'Saturday': 'Sat'
+        };
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+        return daysOfWeek[dayName];
+      }
+
     // get list of events when month or venueID changes
     useEffect(() => {
         firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {  
@@ -777,8 +806,9 @@ export function ArtistInvoice(props) {
         if (events !== null && Object.keys(events).length !== 0) {
             tempInvoices = Object.keys(events).map((key) => {
                 const start = new Date(events[key].start);
+                const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
-                const dateStr = start.toLocaleDateString(undefined, dateOptions);
+                const dateStr = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
                 const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
         
                 return {
