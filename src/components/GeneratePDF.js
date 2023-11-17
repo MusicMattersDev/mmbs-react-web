@@ -229,7 +229,7 @@ export function DownloadConfirmations(props) {
     useEffect(() => {
         // options for customizing date format
         const dateOptions = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateOptions2 = { year: 'numeric', month: 'short', day: 'numeric' };
+        const dateOptions2 = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
         let tempConfirmations = [];
 
         if (events !== null && Object.keys(events).length !== 0) {
@@ -365,7 +365,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
     useEffect(() => {
         // options for customizing date format
         const dateOptions = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateOptions2 = { year: 'numeric', month: 'short', day: 'numeric' };
+        const dateOptions2 = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
         let tempInvoices = [];
 
         if (events !== null && Object.keys(events).length !== 0) {
