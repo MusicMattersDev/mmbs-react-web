@@ -204,6 +204,20 @@ export function DownloadConfirmations(props) {
     const [data, setData] = useState('Generating Confirmations...');
     const [pdfBlobs, setPdfBlobs] = useState([]);
 
+    function formatDayOfWeek(date) {
+        const daysOfWeek = {
+          'Sunday': 'Sun',
+          'Monday': 'Mon',
+          'Tuesday': 'Tue',
+          'Wednesday': 'Wed',
+          'Thursday': 'Thurs',
+          'Friday': 'Fri',
+          'Saturday': 'Sat'
+        };
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+        return daysOfWeek[dayName];
+      }
+
     // get list of events when month or venueID changes
     useEffect(() => {
         firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {
@@ -215,14 +229,15 @@ export function DownloadConfirmations(props) {
     useEffect(() => {
         // options for customizing date format
         const dateOptions = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateOptions2 = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const dateOptions2 = { year: 'numeric', month: 'short', day: 'numeric' };
         let tempConfirmations = [];
 
         if (events !== null && Object.keys(events).length !== 0) {
             tempConfirmations = Object.keys(events).map((key) => {
                 const start = new Date(events[key].start);
+                const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
-                const dateStr = start.toLocaleDateString(undefined, dateOptions);
+                const dateStr = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
                 const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
 
                 return {
@@ -325,6 +340,20 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
     const [data, setData] = useState(<></>);
     const [pdfBlobs, setPdfBlobs] = useState([]);
 
+    function formatDayOfWeek(date) {
+        const daysOfWeek = {
+          'Sunday': 'Sun',
+          'Monday': 'Mon',
+          'Tuesday': 'Tue',
+          'Wednesday': 'Wed',
+          'Thursday': 'Thurs',
+          'Friday': 'Fri',
+          'Saturday': 'Sat'
+        };
+        const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+        return daysOfWeek[dayName];
+      }
+
     // get list of events when month or venueID changes
     useEffect(() => {
         firebaseDb.child('database/events').orderByChild('venue_month_year').equalTo(venueID + "__" + month + "__" + year).on('value', (snapshot) => {
@@ -336,14 +365,15 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
     useEffect(() => {
         // options for customizing date format
         const dateOptions = { weekday: 'short', year: 'numeric', month: 'long', day: 'numeric' };
-        const dateOptions2 = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+        const dateOptions2 = { year: 'numeric', month: 'short', day: 'numeric' };
         let tempInvoices = [];
 
         if (events !== null && Object.keys(events).length !== 0) {
             tempInvoices = Object.keys(events).map((key) => {
                 const start = new Date(events[key].start);
+                const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
-                const dateStr = start.toLocaleDateString(undefined, dateOptions);
+                const dateStr = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
                 const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
 
                 return {
@@ -368,7 +398,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
         // Reset pdfBlobs to an empty array
         setPdfBlobs([]);
         // Reset data to its initial state
-        setData('Generating Confirmations...');
+        setData('Generating Invoices...');
     }, [month, year]);
 
     // sets new data for pdf rendering when invoices change
@@ -669,7 +699,7 @@ export function ArtistConfirmation(props) {
           'Monday': 'Mon',
           'Tuesday': 'Tue',
           'Wednesday': 'Wed',
-          'Thursday': 'Thur',
+          'Thursday': 'Thurs',
           'Friday': 'Fri',
           'Saturday': 'Sat'
         };
@@ -781,7 +811,7 @@ export function ArtistInvoice(props) {
           'Monday': 'Mon',
           'Tuesday': 'Tue',
           'Wednesday': 'Wed',
-          'Thursday': 'Thur',
+          'Thursday': 'Thurs',
           'Friday': 'Fri',
           'Saturday': 'Sat'
         };
