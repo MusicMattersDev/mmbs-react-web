@@ -238,7 +238,7 @@ export function DownloadConfirmations(props) {
                 const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
                 const dateStr = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
-                const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
+                const dateForFile = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}`;
 
                 return {
                     day: start.getDate(),
@@ -374,7 +374,7 @@ export function DownloadInvoices(props) { /* DONE!!!!!! */
                 const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
                 const dateStr = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
-                const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
+                const dateForFile = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}`;
 
                 return {
                     day: start.getDate(),
@@ -727,7 +727,7 @@ export function ArtistConfirmation(props) {
                 const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
                 const dateStr =`${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
-                const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
+                const dateForFile = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}`;
         
                 return {
                     day: start.getDate(),
@@ -839,7 +839,7 @@ export function ArtistInvoice(props) {
                 const fourLetterDay = formatDayOfWeek(start);
                 const end = new Date(events[key].end);
                 const dateStr = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}`;
-                const dateForFile = start.toLocaleDateString(undefined, dateOptions2);
+                const dateForFile = `${fourLetterDay}, ${start.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })}`;
         
                 return {
                     day: start.getDate(),
