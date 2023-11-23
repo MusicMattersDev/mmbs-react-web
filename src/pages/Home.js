@@ -344,7 +344,6 @@ const convertAndUpload = async (file, accessToken, folderId) => {
 
         <center style={{ paddingTop: '100px'}}>
             <h1>Welcome to the Music Matters Booking System</h1>
-            <p>-R11.16.23</p>
 
             {gapiLoaded ? (
                 !isAuth ? (
