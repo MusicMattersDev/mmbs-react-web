@@ -1,29 +1,30 @@
-[debug] [2023-09-22T19:46:41.090Z] ----------------------------------------------------------------------
-[debug] [2023-09-22T19:46:41.091Z] Command:       /Users/bradleyflowers/.nvm/versions/node/v19.6.0/bin/node /Users/bradleyflowers/.nvm/versions/node/v19.6.0/bin/firebase functions:shell
-[debug] [2023-09-22T19:46:41.092Z] CLI Version:   12.5.4
-[debug] [2023-09-22T19:46:41.092Z] Platform:      darwin
-[debug] [2023-09-22T19:46:41.092Z] Node Version:  v19.6.0
-[debug] [2023-09-22T19:46:41.092Z] Time:          Fri Sep 22 2023 14:46:41 GMT-0500 (Central Daylight Time)
-[debug] [2023-09-22T19:46:41.092Z] ----------------------------------------------------------------------
+[debug] [2023-12-14T21:38:50.563Z] ----------------------------------------------------------------------
+[debug] [2023-12-14T21:38:50.564Z] Command:       /opt/homebrew/Cellar/node/21.4.0/bin/node /opt/homebrew/bin/firebase functions:shell
+[debug] [2023-12-14T21:38:50.565Z] CLI Version:   13.0.1
+[debug] [2023-12-14T21:38:50.565Z] Platform:      darwin
+[debug] [2023-12-14T21:38:50.565Z] Node Version:  v21.4.0
+[debug] [2023-12-14T21:38:50.565Z] Time:          Thu Dec 14 2023 15:38:50 GMT-0600 (Central Standard Time)
+[debug] [2023-12-14T21:38:50.565Z] ----------------------------------------------------------------------
 [debug] 
-[debug] [2023-09-22T19:46:41.123Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
-[debug] [2023-09-22T19:46:41.124Z] > authorizing via signed-in user (musicmattersdev@gmail.com)
-[debug] [2023-09-22T19:46:41.124Z] [iam] checking project music-matters-229420 for permissions ["firebase.projects.get"]
-[debug] [2023-09-22T19:46:41.125Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions [none]
-[debug] [2023-09-22T19:46:41.125Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions x-goog-quota-user=projects/music-matters-229420
-[debug] [2023-09-22T19:46:41.126Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions {"permissions":["firebase.projects.get"]}
-[debug] [2023-09-22T19:46:41.281Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions 200
-[debug] [2023-09-22T19:46:41.281Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2023-12-14T21:38:50.599Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-12-14T21:38:50.599Z] > authorizing via signed-in user (musicmattersdev@gmail.com)
+[debug] [2023-12-14T21:38:50.599Z] [iam] checking project music-matters-229420 for permissions ["firebase.projects.get"]
+[debug] [2023-12-14T21:38:50.600Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions [none]
+[debug] [2023-12-14T21:38:50.600Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions x-goog-quota-user=projects/music-matters-229420
+[debug] [2023-12-14T21:38:50.600Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions {"permissions":["firebase.projects.get"]}
+[debug] [2023-12-14T21:38:50.755Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions 200
+[debug] [2023-12-14T21:38:50.755Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/music-matters-229420:testIamPermissions {"permissions":["firebase.projects.get"]}
 [warn] ⚠  functions: Functions Emulator unable to start on port 5000, starting on 5001 instead. {"metadata":{"emulator":{"name":"functions"},"message":"Functions Emulator unable to start on port 5000, starting on 5001 instead."}}
-[debug] [2023-09-22T19:46:41.363Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
-[debug] [2023-09-22T19:46:41.364Z] defaultcredentials: writing to file /Users/bradleyflowers/.config/firebase/musicmattersdev_gmail_com_application_default_credentials.json
-[debug] [2023-09-22T19:46:41.364Z] DEBUG: Setting GAC to /Users/bradleyflowers/.config/firebase/musicmattersdev_gmail_com_application_default_credentials.json
-[debug] [2023-09-22T19:46:41.365Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/music-matters-229420/adminSdkConfig [none]
-[debug] [2023-09-22T19:46:41.631Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/music-matters-229420/adminSdkConfig 200
-[debug] [2023-09-22T19:46:41.631Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/music-matters-229420/adminSdkConfig {"projectId":"music-matters-229420","databaseURL":"https://music-matters-229420.firebaseio.com","storageBucket":"music-matters-229420.appspot.com","locationId":"us-east1"}
-[debug] [2023-09-22T19:46:41.644Z] [functions] Watching "/Users/bradleyflowers/dev/SeniorDesign/functions" for Cloud Functions...
-[debug] [2023-09-22T19:46:41.649Z] Validating nodejs source
-[debug] [2023-09-22T19:46:42.148Z] > [functions] package.json contents: {
+[debug] [2023-12-14T21:38:50.836Z] [functions] Functions Emulator only supports listening on one address (127.0.0.1). Not listening on ::1
+[debug] [2023-12-14T21:38:50.837Z] defaultcredentials: writing to file /Users/bradleyflowers/.config/firebase/musicmattersdev_gmail_com_application_default_credentials.json
+[debug] [2023-12-14T21:38:50.838Z] DEBUG: Setting GAC to /Users/bradleyflowers/.config/firebase/musicmattersdev_gmail_com_application_default_credentials.json
+[debug] [2023-12-14T21:38:50.838Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/music-matters-229420/adminSdkConfig [none]
+[debug] [2023-12-14T21:38:51.162Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/music-matters-229420/adminSdkConfig 200
+[debug] [2023-12-14T21:38:51.163Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/music-matters-229420/adminSdkConfig {"projectId":"music-matters-229420","databaseURL":"https://music-matters-229420.firebaseio.com","storageBucket":"music-matters-229420.appspot.com","locationId":"us-east1"}
+[debug] [2023-12-14T21:38:51.180Z] [functions] Watching "/Users/bradleyflowers/dev/mmbs-react-web/functions" for Cloud Functions...
+[debug] [2023-12-14T21:38:51.187Z] Validating nodejs source
+[warn] ⚠  functions: package.json indicates an outdated version of firebase-functions. Please upgrade using npm install --save firebase-functions@latest in your functions directory. 
+[debug] [2023-12-14T21:38:51.638Z] > [functions] package.json contents: {
   "name": "functions",
   "description": "Cloud Functions for Firebase",
   "scripts": {
@@ -39,7 +40,7 @@
   "main": "index.js",
   "dependencies": {
     "cors": "^2.8.5",
-    "exceljs": "^4.3.0",
+    "exceljs": "^4.4.0",
     "firebase-admin": "^11.8.0",
     "firebase-functions": "^4.3.1"
   },
@@ -48,17 +49,11 @@
   },
   "private": true
 }
-[debug] [2023-09-22T19:46:42.148Z] Building nodejs source
-[debug] [2023-09-22T19:46:42.148Z] Failed to find version of module node: reached end of search path /Users/bradleyflowers/dev/SeniorDesign/functions/node_modules
-[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "19". Using node@19 from host. 
-[debug] [2023-09-22T19:46:42.150Z] Could not find functions.yaml. Must use http discovery
-[debug] [2023-09-22T19:46:42.156Z] Found firebase-functions binary at '/Users/bradleyflowers/dev/SeniorDesign/functions/node_modules/.bin/firebase-functions'
-[info] Serving at port 8835
+[debug] [2023-12-14T21:38:51.638Z] Building nodejs source
+[debug] [2023-12-14T21:38:51.638Z] Failed to find version of module node: reached end of search path /Users/bradleyflowers/dev/mmbs-react-web/functions/node_modules
+[warn] ⚠  functions: Your requested "node" version "18" doesn't match your global version "21". Using node@21 from host. 
+[debug] [2023-12-14T21:38:51.640Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-12-14T21:38:51.645Z] Found firebase-functions binary at '/Users/bradleyflowers/dev/mmbs-react-web/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8996
 
-[debug] [2023-09-22T19:46:42.628Z] Got response from /__/functions.yaml {"endpoints":{"updateODS":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"httpsTrigger":{},"entryPoint":"updateODS"}},"specVersion":"v1alpha1","requiredAPIs":[]}
-[info] shutdown requested via /__/quitquitquit
-
-[debug] [2023-09-22T19:46:47.648Z] [functions] Loaded functions definitions from source: updateODS.
-[debug] [2023-09-22T19:46:47.649Z] [functions[us-central1-updateODS]] http function initialized (http://127.0.0.1:5001/music-matters-229420/us-central1/updateODS).
-[info] i  functions: Loaded functions: updateODS 
-[warn] ⚠  functions: The following emulators are not running, calls to these services will affect production: firestore, database, pubsub, storage, eventarc 
+[debug] [2023-12-14T21:38:52.059Z] Got response from /__/functions.yaml {"endpoints":{"processODS":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"httpsTrigger":{},"entryPoint":"processODS"}},"specVersion":"v1alpha1","requiredAPIs":[]}
