@@ -149,24 +149,16 @@ function Calendar({ showSidebar, setShowSidebar }) {
         const [hour, minute] = timeString.split(":");
         const hours = parseInt(hour, 10);
         
-        // Determining AM or PM
-        let period = "AM";
-        if (hours >= 12) {
-            period = "PM";
-        }
-        
         // Converting 24-hour format to 12-hour format
         let hour12 = hours % 12;
         if (hour12 === 0) {
             hour12 = 12;
         }
         
-        return `${hour12}:${minute} ${period}`;
+        return `${hour12}:${minute}`;
     }
     
     
-
-
     // used for render the copy button on each day of the calendar
     const renderCopyButton = (content) => {
         const date = content.date;
