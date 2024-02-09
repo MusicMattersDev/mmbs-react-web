@@ -81,8 +81,7 @@ export default function FormDialog(props) {
                     endTime: "19:00",
                     price: 175
                 };
-            }
-            else if(weekDay === 5){
+            } else if (weekDay == 7) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
@@ -93,15 +92,15 @@ export default function FormDialog(props) {
                     price: 185
                 };
             }
-            else{ // Saturday - Sunday
+            else{ // Thursday - Sunday
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
                     performers: "",
-                    time: "17:00-19:30",
+                    time: "17:00-20:00",
                     startTime: "17:00",
-                    endTime: "19:30",
-                    price: 185
+                    endTime: "20:00",
+                    price: 200
                 };
             }
           })();
@@ -124,7 +123,7 @@ export default function FormDialog(props) {
             setEndTime(event.endTime);
             const tempTime = event.startTime + "-" + event.endTime;
             // if time isn't a default option, isTimeCustom = true
-            setIsTimeCustom((tempTime !== "17:00-19:00" && tempTime !== "19:00-21:00" && tempTime !== "17:00-19:30" && tempTime !== "19:30-22:00" && tempTime !== "17:00-19:30") ? true : false);
+            setIsTimeCustom((tempTime !== "17:00-19:00" && tempTime !== "19:00-21:00" && tempTime !== "17:00-19:30" && tempTime !== "19:30-22:00" && tempTime !== "17:00-19:30" && tempTime !== "17:00-20:00" && tempTime !== "20:00-23:00") ? true : false);
         // if they are undefined, set to default values
         } else {
             setStartTime(defaultValues["startTime"]);
@@ -136,14 +135,14 @@ export default function FormDialog(props) {
             const tempPrice = event.price;
             setPrice(tempPrice);
             // if price isn't a default option, isPriceCustom = true
-            setIsPriceCustom((tempPrice !== 175 && tempPrice !== 350 && tempPrice !== 185 && tempPrice !== 380) ? true : false);
+            setIsPriceCustom((tempPrice !== 175 && tempPrice !== 350 && tempPrice !== 185 && tempPrice !== 380 && tempPrice !== 200 && tempPrice !== 400) ? true : false);
         // if price is undefined set to default value
         } else {
             setPrice(defaultValues["price"]);
             setIsPriceCustom(false);
         }
     }, [open, formType, event, weekDay])
-
+    
 
     // set startTime and endTime. show / hide custom fields depending on selected option
     const handleTimeChange = (event) => {
@@ -248,11 +247,13 @@ export default function FormDialog(props) {
 
                                         // Check for group and adjust price
                                         if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
-                                            if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 || dayOfWeek === 4){
+                                            if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3){
                                                 setPrice(350);
+                                            } else if(dayOfWeek == 7) {
+                                                setPrice(380);
                                             }
                                             else{
-                                                setPrice(380);
+                                                setPrice(400);
                                             }
                                        }
                                     }
@@ -325,17 +326,17 @@ export default function FormDialog(props) {
                                 {/* first artist of the night */}
                                 {(() => {
                                     switch (dayOfWeek) {
-                                        // Monday - Thursdays are one time
+                                        // Monday - Wednesdays are one time
                                         case 1:
                                         case 2:
                                         case 3:
-                                        case 4:
                                             return <FormControlLabel value="17:00-19:00" control={<Radio />} label="5:00 PM - 7:00 PM" />;
-                                        // Friday start time
+                                        // Thursday - Saturday start time
+                                        case 4:                                                              
                                         case 5:
-                                            return <FormControlLabel value="17:00-19:30" control={<Radio />} label="5:00 PM - 7:30 PM" />;
-                                        // Saturday - Sunday start time
                                         case 6:
+                                            return <FormControlLabel value="17:00-20:00" control={<Radio />} label="5:00 PM - 8:00 PM" />;
+                                        // Sunday start time
                                         case 7:
                                             return <FormControlLabel value="17:00-19:30" control={<Radio />} label="5:00 PM - 7:30 PM" />;
                                         default:
@@ -350,11 +351,12 @@ export default function FormDialog(props) {
                                         case 1:
                                         case 2:
                                         case 3:
-                                        case 4:
                                             return <FormControlLabel value="19:00-21:00" control={<Radio />} label="7:00 PM - 9:00 PM" />;
-                                        // Friday - Sundays are one time
+                                        // Thursday - Saturday are one time
+                                        case 4:
                                         case 5:
                                         case 6:
+                                            return <FormControlLabel value="20:00-23:00" control={<Radio />} label="8:00 PM - 11:00 PM" />;
                                         case 7:
                                             return <FormControlLabel value="19:30-22:00" control={<Radio />} label="7:30 PM - 10:00 PM" />;
                                         default:
@@ -413,13 +415,16 @@ export default function FormDialog(props) {
                                 {/* prices based on day for individual*/}
                                 {(() => {
                                     switch (dayOfWeek) {
+                                        // Monday - Wednesday
                                         case 1:
                                         case 2:
                                         case 3:
-                                        case 4:
                                             return <FormControlLabel value="175" type="number" control={<Radio />} label="$175" />;
+                                        // Thursday - Saturday
+                                        case 4:
                                         case 5:
                                         case 6:
+                                            return <FormControlLabel value="200" type="number" control={<Radio />} label="$200" />;
                                         case 7:
                                             return <FormControlLabel value="185" type="number" control={<Radio />} label="$185" />;
                                         default:
@@ -430,13 +435,17 @@ export default function FormDialog(props) {
                                 {/* prices based on day for group*/}
                                 {(() => {
                                     switch (dayOfWeek) {
+                                        // Monday - Wednesday
                                         case 1:
                                         case 2:
                                         case 3:
-                                        case 4:
                                             return <FormControlLabel value="350" type="number" control={<Radio />} label="$350" />;
+                                        // Thursday - Saturday
+                                        case 4:
                                         case 5:
                                         case 6:
+                                        return <FormControlLabel value="400" type="number" control={<Radio />} label="$400" />;
+                                        // Sunday
                                         case 7:
                                             return <FormControlLabel value="380" type="number" control={<Radio />} label="$380" />;;
                                         default:
