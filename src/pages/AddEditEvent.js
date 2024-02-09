@@ -71,6 +71,7 @@ export default function FormDialog(props) {
 
         // change defaults based on weekday
         const defaultValues = (() => {
+            // Monday
             if (weekDay === 1 || weekDay === 2 || weekDay === 3){
                 return {
                     stage: "",
@@ -81,7 +82,8 @@ export default function FormDialog(props) {
                     endTime: "19:00",
                     price: 175
                 };
-            } else if (weekDay == 7) {
+            // Sunday
+            } else if (weekDay === 7) {
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
@@ -92,7 +94,7 @@ export default function FormDialog(props) {
                     price: 185
                 };
             }
-            else{ // Thursday - Sunday
+            else{ // Thursday - Saturday
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
@@ -425,6 +427,7 @@ export default function FormDialog(props) {
                                         case 5:
                                         case 6:
                                             return <FormControlLabel value="200" type="number" control={<Radio />} label="$200" />;
+                                        // Sunday
                                         case 7:
                                             return <FormControlLabel value="185" type="number" control={<Radio />} label="$185" />;
                                         default:
