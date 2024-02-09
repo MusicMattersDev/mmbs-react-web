@@ -71,7 +71,7 @@ export default function FormDialog(props) {
 
         // change defaults based on weekday
         const defaultValues = (() => {
-            if (weekDay === 1 || weekDay === 2 || weekDay === 3 || weekDay === 4){
+            if (weekDay === 1 || weekDay === 2 || weekDay === 3){
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
