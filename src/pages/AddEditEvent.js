@@ -251,7 +251,7 @@ export default function FormDialog(props) {
                                         if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
                                             if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3){
                                                 setPrice(350);
-                                            } else if(dayOfWeek == 7) {
+                                            } else if(dayOfWeek === 7) {
                                                 setPrice(380);
                                             }
                                             else{
