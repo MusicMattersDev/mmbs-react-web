@@ -15,7 +15,10 @@ import { Button } from "@mui/material";
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
-
+// sleep function
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function Calendar({ showSidebar, setShowSidebar }) {
     const navigate = useNavigate();
@@ -78,6 +81,8 @@ function Calendar({ showSidebar, setShowSidebar }) {
         setFormType("Add");
         setCurrentEvent(event);
         setOpenForm(true);
+        // automatically select Artist input field 200 ms after opening
+        sleep(200).then(() => {document.getElementById("client").focus(); });
     }
     // open edit event form when an event is clicked
     const handleEventClick = (info) => {
@@ -98,6 +103,8 @@ function Calendar({ showSidebar, setShowSidebar }) {
         setFormType("Edit");
         setCurrentEvent(event);
         setOpenForm(true);
+        // automatically select Artist input field 200 ms after opening
+        sleep(200).then(() => {document.getElementById("client").focus(); });
     }
     // run when user presses the copy button
     const handleCopy = async (event, formattedDate) => {
@@ -321,4 +328,4 @@ function Calendar({ showSidebar, setShowSidebar }) {
         </>
     );
             };
-            export default Calendar    
+            export default Calendar    r    
