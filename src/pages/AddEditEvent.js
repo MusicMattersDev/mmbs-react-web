@@ -248,7 +248,7 @@ export default function FormDialog(props) {
                                         setStage(label);
 
                                         // Check for group and adjust price
-                                        if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")){
+                                        if(JSON.stringify(newValue.label).includes("&") || JSON.stringify(newValue.label).includes("Band") || JSON.stringify(newValue.label).includes("Duo") || JSON.stringify(newValue.label).includes("The ")  || JSON.stringify(newValue.label).includes("Lucky Jones")){
                                             if(dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3){
                                                 setPrice(350);
                                             } else if(dayOfWeek === 7) {
