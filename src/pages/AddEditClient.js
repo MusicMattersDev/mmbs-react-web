@@ -7,6 +7,7 @@ const AddEditClient = (props) => {
     performers: [""], // This array has one empty string, resulting in one input box
     email: "",
     splitCheck: false,
+    duo: false,
     bio: "",
   };
 
@@ -169,6 +170,34 @@ const AddEditClient = (props) => {
                           name="splitCheck"
                           value={false}
                           checked={values.splitCheck === false}
+                          onChange={handleFieldChange}
+                          type="radio"
+                        />
+                        <label className="col-form-label">
+                          &nbsp;No&nbsp;&nbsp;
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="col-12 col-md-6">
+                      <div className="form-group">
+                        Duo?
+                        <span className="mandatoryFieldColor">*&nbsp;</span>
+                        &nbsp;&nbsp;&nbsp;
+                        <input
+                          name="duo"
+                          value={true}
+                          checked={values.duo === true}
+                          onChange={handleFieldChange}
+                          type="radio"
+                        />
+                        <label className="col-form-label">
+                          &nbsp;Yes&nbsp;&nbsp;
+                        </label>
+                        <input
+                          name="duo"
+                          value={false}
+                          checked={values.duo === false}
                           onChange={handleFieldChange}
                           type="radio"
                         />
