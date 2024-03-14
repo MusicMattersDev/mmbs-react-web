@@ -35,7 +35,8 @@ export default function FormDialog(props) {
     // logic for whether or not custom time or price fields are shown
     const [isTimeCustom, setIsTimeCustom] = React.useState(false);
     const [isPriceCustom, setIsPriceCustom] = React.useState(false);
-    const [isFirstSpotTaken, setIsFirstSpotTaken] = React.useState(false);
+    const [matchingEvent, setMatchingEvent] = useState(false);
+    const [matchingEventStartTime, setMatchingEventStartTime] = useState(event.startTime);
     // default booking times based on days variables
     const d = new Date();
     let day = d.getDay();
@@ -50,6 +51,16 @@ export default function FormDialog(props) {
             }
         })
     }, [])
+
+    // get list of events on render
+    useEffect(() => {
+        firebaseDb.child('database/events').on('value', snapshot => {  
+            if (snapshot.val() != null) {  
+                setEvents(snapshot.val());
+            }
+        })
+    }, [])
+         
     // format for autocomplete options
     useEffect(() => {
         let tempClientsList = [];
@@ -70,38 +81,69 @@ export default function FormDialog(props) {
         setWeekDay(dayOfWeek);
 
         // change defaults based on weekday
+        // change defaults based on weekday
         const defaultValues = (() => {
-            // Monday
+            // search for an event with a matching date
+            setMatchingEvent(false);
+                Object.keys(events).map((key) => {
+                if (events[key].date === event.date) { 
+                    setMatchingEventStartTime(events[key].startTime);
+                    setMatchingEvent(true);
+                }
+                return matchingEvent;
+            })
+
+            // Monday - Wednesday
+            var tempStartTime = "";
+            var tempEndTime = "";
             if (weekDay === 1 || weekDay === 2 || weekDay === 3){
+                tempStartTime = "17:00";
+                tempEndTime = "19:00";
+                if (matchingEvent === true && matchingEventStartTime === "17:00") {
+                    tempStartTime = "19:00";
+                    tempEndTime = "21:00";
+                } 
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
                     performers: "",
-                    time: "17:00-19:00",
-                    startTime: "17:00",
-                    endTime: "19:00",
+                    time: tempStartTime + "-" + tempEndTime,
+                    startTime: tempStartTime,
+                    endTime: tempEndTime,
                     price: 175
                 };
             // Sunday
             } else if (weekDay === 7) {
+                tempStartTime = "17:00";
+                tempEndTime = "19:30";
+                if (matchingEvent === true && matchingEventStartTime === "17:00") {
+                    tempStartTime = "19:30";
+                    tempEndTime = "22:00";
+                }
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
                     performers: "",
-                    time: "17:00-19:30",
-                    startTime: "17:00",
-                    endTime: "19:30",
+                    time: tempStartTime + "-" + tempEndTime,
+                    startTime: tempStartTime,
+                    endTime: tempEndTime,
                     price: 185
                 };
             }
             else{ // Thursday - Saturday
+                tempStartTime = "17:00";
+                tempEndTime = "20:00";
+                if (matchingEvent === true && matchingEventStartTime === "17:00") {
+                    tempStartTime = "20:00";
+                    tempEndTime = "23:00";
+                }
                 return {
                     stage: "",
                     email: "NO_EMAIL_FOR_ARTIST",
                     performers: "",
-                    time: "17:00-20:00",
-                    startTime: "17:00",
-                    endTime: "20:00",
+                    time: tempStartTime + "-" + tempEndTime,
+                    startTime: tempStartTime,
+                    endTime: tempEndTime,
                     price: 200
                 };
             }
