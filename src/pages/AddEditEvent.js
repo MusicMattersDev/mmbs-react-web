@@ -369,9 +369,13 @@ export default function FormDialog(props) {
 
                                 {/* first artist of the night */}
                                 {(() => {
+                                    // If there already an event in the first timeslot, do not display the button for the timeslot
+                                    if (formType === "Add" && matchingEvent === true && matchingEventStartTime === "17:00") {
+                                        return;
+                                    }
                                     switch (dayOfWeek) {
                                         // Monday - Wednesdays are one time
-                                        case 1:
+                                        case 1: 
                                         case 2:
                                         case 3:
                                             return <FormControlLabel value="17:00-19:00" control={<Radio />} label="5:00 PM - 7:00 PM" />;
@@ -390,6 +394,10 @@ export default function FormDialog(props) {
 
                                 {/* second artist of the night */}
                                 {(() => {
+                                    // If there already an event in the second timeslot, do not display the button for the timeslot
+                                    if (formType === "Add" && matchingEvent === true && matchingEventStartTime === "19:00") {
+                                        return;
+                                    }
                                     switch (dayOfWeek) {
                                         // Monday - Thursdays are one time
                                         case 1:
