@@ -32,6 +32,7 @@ export default function FormDialog(props) {
     // used for holding an object of the clients for autocomplete
     const [clients, setClients] = useState({});
     const [clientsList, setClientsList] = useState();
+    const [events, setEvents] = useState({});
     // logic for whether or not custom time or price fields are shown
     const [isTimeCustom, setIsTimeCustom] = React.useState(false);
     const [isPriceCustom, setIsPriceCustom] = React.useState(false);
@@ -42,6 +43,7 @@ export default function FormDialog(props) {
     let day = d.getDay();
     // const [day, setDay] = useState('');
 
+    
 
     // get list of clients on render
     useEffect(() => {
