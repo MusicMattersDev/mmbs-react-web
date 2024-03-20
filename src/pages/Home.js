@@ -7,10 +7,27 @@ const Home = () => {
     const [isAuth, setIsAuth] = useState(false);
     const [gapiLoaded, setGapiLoaded] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    //CONFIRMATIONS
     const [xlsxFile, setXlsxFile] = useState(null);
     const [confirmationsZip, setConfirmationsZip] = useState(null);
     const [xlsxFileName, setXlsxFileName] = useState("Choose Excel File for Emailing the Client Confirmations");
     const [confirmationsZipName, setConfirmationsZipName] = useState("Choose the Confirmations Zip File for the Month");
+
+
+    // CALENDAR
+    const [xlsxCalendarFile, setXlsxCalFile] = useState(null);
+    const [pdfCalendarFile, setPdfFile] = useState(null);
+    const [calendarxlsxFileName, setCalxlsxFileName] = useState("Choose Excel File for Emailing the Calendar");
+    const [pdfCalendarName, setCalendarPDFName] = useState("Choose the Calendar pdf File for the Month");
+    
+
+    // BOOKING LIST
+    const [xlsxBookingList, setXlsxBLFile] = useState(null);
+    const [pdfBookingListFile, setBLpdfFile] = useState(null);
+    const [bookingListxlsxFileName, setBLxlsxFileName] = useState("Choose Excel File for Emailing the Booking List");
+    const [pdfBookingList, setBLPDFName] = useState("Choose the Booking List pdf File for the Month");
+
+
     const [isUploading, setIsUploading] = useState(false); // New state variable to track upload status
 
     // Placeholder: Replace with your actual client ID from the Google Developer Console
@@ -97,6 +114,42 @@ const Home = () => {
 
     document.querySelector("label[for='confirmationsZipInput']").classList.add("file-selected");
 
+    };
+
+    const handleXlsxBookingListFileChange = (event) => {
+        const file = event.target.files[0];
+        console.log("Selected Booking List XLSX file:", file.name);
+        setXlsxBLFile(file);
+        setBLxlsxFileName(file.name);
+
+    document.querySelector("label[for='BLxlsxFileInput']}").classList.add("file-selected");
+    };
+
+    const handleBookingListPDFChange = (event) => {
+        const file = event.target.files[0];
+        console.log("Selected Booking List PDF file:", file.name);
+        setBLpdfFile(file);
+        setBLPDFName(file.name);
+
+    document.querySelector("label[for='BLPDFFileInput']}").classList.add("file-selected");
+    };
+
+    const handleXlsxCalendarFileChange = (event) => {
+        const file = event.target.files[0];
+        console.log("Selected Calendar XLSX file:", file.name);
+        setXlsxCalFile(file);
+        setCalxlsxFileName(file.name);
+
+    document.querySelector("label[for='CalxlsxFileInput']}").classList.add("file-selected");
+    };
+
+    const handleCalendarPDFChange = (event) => {
+        const file = event.target.files[0];
+        console.log("Selected Calendar PDF file:", file.name);
+        setPdfFile(file);
+        setCalendarPDFName(file.name);
+
+    document.querySelector("label[for='CalPDFFileInput']}").classList.add("file-selected");
     };
     
     const unzipAndExtractFiles = async (zipFile) => {
@@ -223,15 +276,27 @@ const handleDedicatedUpload = async () => {
     const xlsxFolderName = `ExcelFiles-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
     const confirmationsFolderName = `Confirmations-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
 
+    const xlsxBLFolderName = `BookingListExcelFiles-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
+    const bookingListFolderName = `BookingList-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
+
+    const xlsxCalFolderName = `CalendarExcelFiles-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
+    const calendarFolderName = `ExhangeBookingCalendar-${new Date().toLocaleString('default', { month: 'long' })}-${currentYear}`;
+
     // Get folder IDs
     const xlsxFolderId = await getFolderId(xlsxFolderName, accessToken);
     const confirmationsFolderId = await getFolderId(confirmationsFolderName, accessToken);
+
+    const xlsxBLFolderId = await getFolderId(xlsxBLFolderName, accessToken);
+    const bookingListFolderId = await getFolderId(bookingListFolderName, accessToken);
+
+    const xlsxCalFolderId = await getFolderId(xlsxCalFolderName, accessToken);
+    const calendarFolderId = await getFolderId(calendarFolderName, accessToken);
 
     // Check for duplicates first
     let duplicateFound = false;
     let totalFiles = 0; // Initialize totalFiles
 
-    if (xlsxFile && await checkFileExists(xlsxFile.name, xlsxFolderId, accessToken)) {
+    if ((xlsxFile && await checkFileExists(xlsxFile.name, xlsxFolderId, accessToken)) || (xlsxCalendarFile && await checkFileExists(xlsxCalendarFile.name, xlsxCalFolderId, accessToken)) ||  (xlsxBookingList && await checkFileExists(xlsxBookingList.name, xlsxBLFolderId, accessToken))) {
         alert('Excel file already exists in Drive.');
         duplicateFound = true;
     }
@@ -244,6 +309,24 @@ const handleDedicatedUpload = async () => {
             totalFiles++; // Add xlsxFile to totalFiles count
             await convertAndUpload(xlsxFile, accessToken, xlsxFolderId);
         }
+        if (xlsxCalendarFile) {
+            totalFiles++; // Add xlsxFile to totalFiles count
+            await convertAndUpload(xlsxCalendarFile, accessToken, xlsxCalFolderId);
+        }
+        if (xlsxBookingList) {
+            totalFiles++; // Add xlsxFile to totalFiles count
+            await convertAndUpload(xlsxBookingList, accessToken, xlsxBLFolderId);
+        }
+        if (pdfBookingList) {
+            totalFiles++; 
+            await  uploadFileToDrive(pdfBookingListFile, accessToken, bookingListFolderId);
+        }
+
+       if (pdfCalendarFile) {
+            totalFiles++; 
+            await  uploadFileToDrive(pdfCalendarFile, accessToken, calendarFolderId);
+        }
+
 
         for (let file of confirmationFiles) {
             if (await checkFileExists(file.name, confirmationsFolderId, accessToken)) {
@@ -262,12 +345,33 @@ const handleDedicatedUpload = async () => {
                 setUploadProgress((uploadedFiles / totalFiles) * 100);
             }
 
+            if (xlsxCalendarFile) {
+                uploadedFiles++;
+                setUploadProgress((uploadedFiles / totalFiles) * 100);
+            }
+
+            if (xlsxBookingList) {
+                uploadedFiles++;
+                setUploadProgress((uploadedFiles / totalFiles) * 100);
+            }
+
+           if (pdfBookingList) {
+                uploadedFiles++;
+                setUploadProgress((uploadedFiles / totalFiles) * 100);
+           }
+
+           if (pdfCalendarFile) {
+                uploadedFiles++;
+                setUploadProgress((uploadedFiles / totalFiles) * 100);
+           }
+
             // Upload confirmation files if they exist and are not duplicates
             for (let file of confirmationFiles) {
                 await uploadFileToDrive(file, accessToken, confirmationsFolderId);
                 uploadedFiles++;
                 setUploadProgress((uploadedFiles / totalFiles) * 100);
             }
+
 
             alert('Upload Complete. Confirmations are now ready to be sent out!');
         } else {
@@ -362,6 +466,26 @@ const convertAndUpload = async (file, accessToken, folderId) => {
                         <div className="input-wrapper">
                             <input type="file" id="confirmationsZipInput" className="custom-file-input" accept=".zip" onChange={handleConfirmationsZipChange} />
                             <label htmlFor="confirmationsZipInput" className="custom-file-label">{confirmationsZipName}</label>
+                        </div>
+
+                        <div style={{ paddingTop: '25px'}} className="input-wrapper">
+                            <input type="file" id="BLxlsxFileInput" className="custom-file-input" accept=".xlsx" onChange={handleXlsxBookingListFileChange} />
+                            <label htmlFor="BLxlsxFileInput" className="custom-file-label">{bookingListxlsxFileName}</label>
+                        </div>
+                       
+                        <div className="input-wrapper">
+                            <input type="file" id="BLPDFFileInput" className="custom-file-input" accept=".pdf" onChange={handleBookingListPDFChange} />
+                            <label htmlFor="BLPDFFileInput" className="custom-file-label">{pdfBookingList}</label>
+                        </div>
+
+                        <div style={{ paddingTop: '25px'}} className="input-wrapper">
+                            <input type="file" id="CalxlsxFileInput" className="custom-file-input" accept=".xlsx" onChange={handleXlsxCalendarFileChange} />
+                            <label htmlFor="CalxlsxFileInput" className="custom-file-label">{calendarxlsxFileName}</label>
+                        </div>
+                       
+                        <div className="input-wrapper">
+                            <input type="file" id="CalPDFFileInput" className="custom-file-input" accept=".pdf" onChange={handleCalendarPDFChange} />
+                            <label htmlFor="CalPDFFileInput" className="custom-file-label">{pdfCalendarName}</label>
                         </div>
                         <div className="button-group">
                             <button className="button" onClick={handleDedicatedUpload}>Upload to Drive</button>
