@@ -204,7 +204,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                 >
                     <ContentCopyIcon />
                 </IconButton>
-                <span style={{ marginLeft: "10px" }}>{content.dayNumberText}</span>
+                <span style={{ marginLeft: "20px" }}>{content.dayNumberText}</span>
             </div>
         );
     }
@@ -243,6 +243,12 @@ function Calendar({ showSidebar, setShowSidebar }) {
             }
     
             pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+            pdf.setFontSize(20);
+            pdf.setTextColor("#264a81");
+            pdf.text("Live Music Nightly", 20, 8);
+            pdf.text("On The Patio", 23, 16);
+            pdf.text("Live Music Nightly", 179, 8);
+            pdf.text("On The Patio", 184, 16);
             pdf.save("Calendar.pdf");
         });
     };
@@ -251,20 +257,63 @@ function Calendar({ showSidebar, setShowSidebar }) {
 
     return (
         <>
-            <style jsx>{`
+            <style jsx>{`   
+                
+
+                .fc-border {
+                  color: #E0F2FF; 
+
+                }
+                .fc-day-sat, .fc-day-sun {
+                    background-color: #E0F2FF; 
+                }
+                
+                .fc-col-header-cell {
+                    background-color: #264a81;
+                    font-size: 30px;
+                }
+                
+                .fc-col-header-cell-cushion {
+                    color: #ffffff; /* Change to your preferred color */
+                }
+                         
                 .fc-event-title, .fc-event .fc-title {
                     white-space: normal;
                     overflow: visible;
                     lineHeight: 1.2;
-                }
+                }'
+
+
                 .fc-daygrid-day.fc-day-other .fc-event {
                     display: none;
+                    float: left;
+                }
+
+                
+                .fc-daygrid-day-number {
+                    float: left; /* Align to the left */
+                    margin-right: auto;
+                    font-size: 50px;
+                    color: black;
+                    fontWeight: bold;
                 }
                 .fc-event{
                     display: flex;
                     align-items: center;
                     justify-content: center;
                     text-align: center;
+                }
+                .fc-toolbar-title {
+                    font-size: 8em !important;
+                    color: #264a81;
+                }
+                .fc-timegrid-slot-minor {
+                    border-bottom: 1px solid var(--fc-border-color, black) !important;
+                    border-top: 1px dotted var(--fc-border-color, black) !important;
+                }
+              
+
+             
                 }
             `}</style>
     <div className='content' >
@@ -275,6 +324,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
     </div>
                 <div id="calendar" style={{paddingLeft: '30px', paddingRight: '30px', paddingTop: '30px', paddingBottom: '30px'}} 
                 >
+
                     <div className="calendar-container">
                     <FullCalendar
                         ref={calendarRef}
@@ -282,7 +332,7 @@ function Calendar({ showSidebar, setShowSidebar }) {
                         headerToolbar={{
                             center: 'title',
                             right: 'prev,next today',
-                            left: 'prev,next today'
+                            left: 'prev,next today',
                         }}
                         eventContent={({ event }) => (
                             <div 
@@ -293,17 +343,22 @@ function Calendar({ showSidebar, setShowSidebar }) {
                                     height: '100%',
                                 }}
                             >
-                                <strong style={{ fontSize: '16px', color: 'black' }}>{event.title}</strong>
+                                <strong style={{ fontSize: '29px', color: 'black'}}>{event.title}</strong>
                                 <br />
-                                <i style={{ fontSize: '14px', fontWeight: 'bold' }}>{to12HourFormat(event.extendedProps.startTime)} - {to12HourFormat(event.extendedProps.endTime)}</i>
+                                <i style={{ fontSize: '28px', fontWeight: 'bold', color: 'black'}}>{to12HourFormat(event.extendedProps.startTime)} - {to12HourFormat(event.extendedProps.endTime)}</i>
                             </div>
                         )}
+                        dayHeaderFormat={{ weekday: 'long' }}      
                         contentHeight="auto"
                         plugins={[dayGridPlugin, interactionPlugin]}
                         initialView="dayGridMonth"
                         dateClick={handleDateClick}
                         eventClick={handleEventClick}
                         dayCellContent={renderCopyButton}
+                        showNonCurrentDates = {false}
+                                        
+
+                        
                     />
                     </div>
                 </div>
@@ -328,4 +383,4 @@ function Calendar({ showSidebar, setShowSidebar }) {
         </>
     );
             };
-            export default Calendar    r    
+            export default Calendar       

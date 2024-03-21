@@ -26,8 +26,12 @@
   transition: opacity 0.3s;  /* Smooth transition */
 }
 
+.fc-toolbar-title{
+  font-size: 5em;
+}
+
 .fc-header-toolbar .fc-today-button.fc-button-primary-disabled {
-  opacity: 0 !important;  /* Added !important */
+  opacity: .0 !important;  /* Added !important */
   transition: opacity 0.3s;  /* Smooth transition */
 }
 
@@ -146,11 +150,18 @@ input{
   transition: background-color 0.3s;
 }
 
+.roboto-bold {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
 .custom-file-label:hover {
   background-color: #086cbd;
 }
 
   .fc-toolbar-title {
+    font-family: "Roboto", sans-serif;
     text-align: center !important;
     font-weight: bold !important;
   }
